@@ -18,6 +18,7 @@
         #countdown { margin-top: 15px; font-size: 48px; font-weight: bold; color: #dc3545; }
         #status { margin-top: 10px; font-size: 14px; color: #666; }
         #errorMsg { color: #dc3545; margin-top: 20px; padding: 15px; background: #f8d7da; border-radius: 5px; display: none; }
+        #debug { margin-top: 20px; padding: 10px; background: #ffeb3b; font-size: 12px; text-align: left; }
     </style>
 </head>
 <body>
@@ -34,50 +35,64 @@
         <div id="status"></div>
         <button id="continueBtn">Continue to Sign-Off Form</button>
         <p id="errorMsg"></p>
+        <div id="debug">Loading...</div>
     </div>
 
     <script>
-        // Get URL parameters
+        var debug = document.getElementById('debug');
+        
+        function log(msg) {
+            debug.innerHTML = msg;
+        }
+
         function getUrlParam(param) {
-            const urlParams = new URLSearchParams(window.location.search);
+            var urlParams = new URLSearchParams(window.location.search);
             return urlParams.get(param);
         }
 
-        // Config
-        const videoUrl = getUrlParam('video');
-        const talkId = getUrlParam('talkid');
-        const delayMinutes = parseInt(getUrlParam('delay')) || 0;
-        const formUrl = 'https://creatorapp.zoho.eu/quantumbuild1/toolbox/#Form:Scheduled_Talks?Scheduled_Talk_ID=' + talkId;
+        var videoUrl = getUrlParam('video');
+        var talkId = getUrlParam('talkid');
+        var delayMinutes = parseInt(getUrlParam('delay')) || 0;
+        var formUrl = 'https://creatorapp.zoho.eu/quantumbuild1/toolbox/#Form:Scheduled_Talks?Scheduled_Talk_ID=' + talkId;
 
-        // Elements
-        const video = document.getElementById('introVideo');
-        const btn = document.getElementById('continueBtn');
-        const progressFill = document.getElementById('progressFill');
-        const progressText = document.getElementById('progressText');
-        const countdown = document.getElementById('countdown');
-        const status = document.getElementById('status');
-        const errorMsg = document.getElementById('errorMsg');
+        var video = document.getElementById('introVideo');
+        var btn = document.getElementById('continueBtn');
+        var progressFill = document.getElementById('progressFill');
+        var progressText = document.getElementById('progressText');
+        var countdown = document.getElementById('countdown');
+        var status = document.getElementById('status');
+        var errorMsg = document.getElementById('errorMsg');
 
-        // State
-        let watchedEnough = false;
-        let timeElapsed = false;
-        const startTime = Date.now();
-        const requiredMs = delayMinutes * 60 * 1000;
+        var watchedEnough = false;
+        var timeElapsed = false;
+        var startTime = Date.now();
+        var requiredMs = delayMinutes * 60 * 1000;
 
-        // Validate
+        log('Params loaded. Video URL: ' + (videoUrl ? 'Yes' : 'No'));
+
         if (!videoUrl || !talkId) {
             errorMsg.style.display = 'block';
-            errorMsg.textContent = 'Error: Missing video URL or talk ID. Please use the link from your email.';
+            errorMsg.textContent = 'Error: Missing video URL or talk ID.';
         } else {
             video.src = decodeURIComponent(videoUrl);
         }
 
-        // Video progress
-        video.ontimeupdate = function() {
+        // Video events
+        video.addEventListener('loadeddata', function() {
+            log('Video loaded. Duration: ' + video.duration + 's');
+        });
+
+        video.addEventListener('play', function() {
+            log('Video playing...');
+        });
+
+        video.addEventListener('timeupdate', function() {
             if (video.duration) {
-                const percent = (video.currentTime / video.duration) * 100;
+                var percent = (video.currentTime / video.duration) * 100;
                 progressFill.style.width = percent + '%';
                 progressText.textContent = Math.round(percent) + '% watched';
+                log('Progress: ' + Math.round(percent) + '% | Watched: ' + watchedEnough + ' | TimeOK: ' + timeElapsed);
+                
                 if (percent >= 90 && !watchedEnough) {
                     watchedEnough = true;
                     progressFill.style.background = '#28a745';
@@ -85,20 +100,24 @@
                     checkReady();
                 }
             }
-        };
+        });
 
-        video.onended = function() {
+        video.addEventListener('ended', function() {
             watchedEnough = true;
             progressFill.style.width = '100%';
             progressFill.style.background = '#28a745';
             progressText.textContent = 'Video complete ✓';
+            log('Video ended. Checking ready...');
             checkReady();
-        };
+        });
 
-        // Countdown timer
+        video.addEventListener('error', function(e) {
+            log('VIDEO ERROR: ' + video.error.message);
+        });
+
         function updateCountdown() {
-            const elapsed = Date.now() - startTime;
-            const remaining = Math.max(0, requiredMs - elapsed);
+            var elapsed = Date.now() - startTime;
+            var remaining = Math.max(0, requiredMs - elapsed);
             
             if (remaining <= 0) {
                 timeElapsed = true;
@@ -107,22 +126,21 @@
                 status.textContent = 'Time complete ✓';
                 checkReady();
             } else {
-                const mins = Math.floor(remaining / 60000);
-                const secs = Math.floor((remaining % 60000) / 1000);
+                var mins = Math.floor(remaining / 60000);
+                var secs = Math.floor((remaining % 60000) / 1000);
                 countdown.textContent = mins + ':' + (secs < 10 ? '0' : '') + secs;
                 status.textContent = 'Time remaining';
             }
         }
 
-        // Check if ready
         function checkReady() {
             if (watchedEnough && (timeElapsed || delayMinutes === 0)) {
                 btn.className = 'ready';
+                log('BUTTON READY! watched=' + watchedEnough + ' timeElapsed=' + timeElapsed);
             }
         }
 
-        // Button click
-        btn.onclick = function() {
+        btn.addEventListener('click', function() {
             if (!watchedEnough) {
                 alert('Please watch at least 90% of the video first.');
                 return;
@@ -132,9 +150,8 @@
                 return;
             }
             window.location.href = formUrl;
-        };
+        });
 
-        // Start countdown if delay > 0
         if (delayMinutes > 0) {
             updateCountdown();
             setInterval(updateCountdown, 1000);
