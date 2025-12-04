@@ -5,88 +5,99 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Safety Briefing</title>
     <style>
-        body { font-family: Arial, sans-serif; background: #f5f5f5; margin: 0; padding: 20px; }
-        .video-container { max-width: 800px; margin: 0 auto; padding: 20px; background: white; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); text-align: center; }
-        .video-title { color: #333; margin-bottom: 15px; font-size: 24px; }
-        #introVideo { width: 100%; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); background: #000; }
-        #continueBtn { margin-top: 20px; padding: 15px 40px; font-size: 18px; background-color: #ccc; color: #666; border: none; border-radius: 5px; cursor: not-allowed; }
-        #continueBtn.ready { background-color: #28a745; color: white; cursor: pointer; }
+        * { box-sizing: border-box; }
+        body {
+            font-family: Arial, sans-serif;
+            background: #f5f5f5;
+            margin: 0;
+            padding: 20px;
+        }
+        .video-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        .video-title { color: #333; margin-bottom: 20px; }
+        #playerWrapper {
+            position: relative;
+            padding-bottom: 56.25%;
+            height: 0;
+            overflow: hidden;
+            border-radius: 8px;
+            background: #000;
+        }
+        #playerWrapper iframe,
+        #playerWrapper video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        #continueBtn {
+            margin-top: 25px;
+            padding: 15px 50px;
+            font-size: 18px;
+            background-color: #cccccc;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: not-allowed;
+        }
+        #continueBtn.ready {
+            background-color: #28a745;
+            cursor: pointer;
+        }
         #continueBtn.ready:hover { background-color: #218838; }
-        #progressContainer { margin-top: 15px; color: #666; }
-        #progressBar { width: 100%; height: 8px; background: #e0e0e0; border-radius: 4px; overflow: hidden; margin-top: 8px; }
-        #progressFill { height: 100%; background: #007bff; width: 0%; transition: width 0.3s; }
-        #errorMsg { color: #dc3545; margin-top: 20px; padding: 15px; background: #f8d7da; border-radius: 5px; display: none; }
+        #progressContainer { margin-top: 20px; color: #666; }
+        #progressBar {
+            width: 100%;
+            height: 10px;
+            background: #e0e0e0;
+            border-radius: 5px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+        #progressFill {
+            height: 100%;
+            background: #007bff;
+            width: 0%;
+            transition: width 0.3s;
+        }
+        #errorMsg {
+            color: #dc3545;
+            display: none;
+            padding: 20px;
+            background: #ffe6e6;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+        #timerNote {
+            margin-top: 15px;
+            color: #666;
+            font-size: 14px;
+            display: none;
+        }
     </style>
 </head>
 <body>
-    <div class="video-container">
-        <h2 class="video-title">Safety Briefing - Please Watch Before Signing Off</h2>
-        <video id="introVideo" controls>
-            Your browser does not support video playback.
-        </video>
-        <div id="progressContainer">
-            <span id="progressText">Watch the video to continue...</span>
-            <div id="progressBar"><div id="progressFill"></div></div>
+
+<div class="video-container">
+    <h2 class="video-title">Safety Briefing - Please Watch Before Signing Off</h2>
+    
+    <div id="playerWrapper"></div>
+    
+    <div id="progressContainer">
+        <span id="progressText">Watch the video to continue...</span>
+        <div id="progressBar">
+            <div id="progressFill"></div>
         </div>
-        <button id="continueBtn">Continue to Sign-Off Form</button>
-        <p id="errorMsg"></p>
     </div>
-
-    <script>
-        function getUrlParam(param) {
-            var urlParams = new URLSearchParams(window.location.search);
-            return urlParams.get(param);
-        }
-
-        var videoUrl = getUrlParam('video');
-        var talkId = getUrlParam('talkid');
-        var formUrl = 'https://rascortalks.zohocreatorportal.eu/#Form:Scheduled_Talks/record-edit/Scheduled_Talks/' + talkId;
-
-        var video = document.getElementById('introVideo');
-        var btn = document.getElementById('continueBtn');
-        var progressFill = document.getElementById('progressFill');
-        var progressText = document.getElementById('progressText');
-        var errorMsg = document.getElementById('errorMsg');
-
-        var watchedEnough = false;
-
-        if (!videoUrl || !talkId) {
-            errorMsg.style.display = 'block';
-            errorMsg.textContent = 'Error: Missing video URL or talk ID. Please use the link from your email.';
-        } else {
-            video.src = decodeURIComponent(videoUrl);
-        }
-
-        video.addEventListener('timeupdate', function() {
-            if (video.duration) {
-                var percent = (video.currentTime / video.duration) * 100;
-                progressFill.style.width = percent + '%';
-                progressText.textContent = Math.round(percent) + '% watched';
-                
-                if (percent >= 90 && !watchedEnough) {
-                    watchedEnough = true;
-                    progressFill.style.background = '#28a745';
-                    progressText.textContent = 'Video complete ✓';
-                    btn.className = 'ready';
-                }
-            }
-        });
-
-        video.addEventListener('ended', function() {
-            watchedEnough = true;
-            progressFill.style.width = '100%';
-            progressFill.style.background = '#28a745';
-            progressText.textContent = 'Video complete ✓';
-            btn.className = 'ready';
-        });
-
-        btn.addEventListener('click', function() {
-            if (!watchedEnough) {
-                alert('Please watch at least 90% of the video first.');
-                return;
-            }
-            window.location.href = formUrl;
-        });
-    </script>
-</body>
-</html>
+    
+    <p id="timerNote">Video must play for the required time before you can continue.</p>
+    
+    <button id="continueBtn" onclick="goToForm()">Cont
