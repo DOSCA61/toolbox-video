@@ -30,8 +30,7 @@
             border-radius: 8px;
             background: #000;
         }
-        #playerWrapper iframe,
-        #playerWrapper video {
+        #player {
             position: absolute;
             top: 0;
             left: 0;
@@ -76,12 +75,6 @@
             border-radius: 5px;
             margin-top: 20px;
         }
-        #timerNote {
-            margin-top: 15px;
-            color: #666;
-            font-size: 14px;
-            display: none;
-        }
     </style>
 </head>
 <body>
@@ -89,7 +82,9 @@
 <div class="video-container">
     <h2 class="video-title">Safety Briefing - Please Watch Before Signing Off</h2>
     
-    <div id="playerWrapper"></div>
+    <div id="playerWrapper">
+        <div id="player"></div>
+    </div>
     
     <div id="progressContainer">
         <span id="progressText">Watch the video to continue...</span>
@@ -98,6 +93,137 @@
         </div>
     </div>
     
-    <p id="timerNote">Video must play for the required time before you can continue.</p>
+    <button id="continueBtn" onclick="goToForm()">Continue to Sign-Off</button>
     
-    <button id="continueBtn" onclick="goToForm()">Cont
+    <p id="errorMsg"></p>
+</div>
+
+<script>
+    var requiredPercent = 90;
+    
+    function getUrlParam(param) {
+        var urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get(param);
+    }
+    
+    function getYouTubeId(url) {
+        if (!url) return null;
+        var patterns = [
+            /youtu\.be\/([^?&#]+)/,
+            /youtube\.com\/shorts\/([^?&#]+)/,
+            /youtube\.com\/watch\?v=([^&#]+)/,
+            /youtube\.com\/embed\/([^?&#]+)/
+        ];
+        for (var i = 0; i < patterns.length; i++) {
+            var match = url.match(patterns[i]);
+            if (match) return match[1];
+        }
+        return null;
+    }
+    
+    var videoUrl = getUrlParam('video');
+    var talkId = getUrlParam('talkid');
+    var videoId = getYouTubeId(videoUrl);
+    
+    var formUrl = 'https://rascortalks.zohocreatorportal.eu/#Form:Scheduled_Talks/record-edit/Scheduled_Talks/' + talkId;
+    
+    var progressFill = document.getElementById('progressFill');
+    var progressText = document.getElementById('progressText');
+    var btn = document.getElementById('continueBtn');
+    var errorMsg = document.getElementById('errorMsg');
+    
+    var player;
+    var watchedEnough = false;
+    var progressInterval;
+    
+    if (!videoUrl || !talkId) {
+        document.getElementById('playerWrapper').style.display = 'none';
+        document.getElementById('progressContainer').style.display = 'none';
+        btn.style.display = 'none';
+        errorMsg.style.display = 'block';
+        errorMsg.textContent = 'Error: Missing video URL or talk ID. Please use the link from your email.';
+    } else if (!videoId) {
+        document.getElementById('playerWrapper').style.display = 'none';
+        document.getElementById('progressContainer').style.display = 'none';
+        btn.style.display = 'none';
+        errorMsg.style.display = 'block';
+        errorMsg.textContent = 'Error: Could not extract YouTube video ID from URL.';
+    }
+    
+    var tag = document.createElement('script');
+    tag.src = 'https://www.youtube.com/iframe_api';
+    var firstScriptTag = document.getElementsByTagName('script')[0];
+    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+    
+    function onYouTubeIframeAPIReady() {
+        if (!videoId) return;
+        
+        player = new YT.Player('player', {
+            videoId: videoId,
+            playerVars: {
+                'autoplay': 0,
+                'controls': 1,
+                'rel': 0,
+                'modestbranding': 1,
+                'playsinline': 1
+            },
+            events: {
+                'onReady': onPlayerReady,
+                'onStateChange': onPlayerStateChange,
+                'onError': onPlayerError
+            }
+        });
+    }
+    
+    function onPlayerReady(event) {
+        progressInterval = setInterval(updateProgress, 500);
+    }
+    
+    function onPlayerStateChange(event) {
+        if (event.data === YT.PlayerState.ENDED) {
+            markComplete();
+        }
+    }
+    
+    function onPlayerError(event) {
+        errorMsg.style.display = 'block';
+        errorMsg.textContent = 'Error loading video. Error code: ' + event.data;
+    }
+    
+    function updateProgress() {
+        if (!player || typeof player.getDuration !== 'function') return;
+        
+        var duration = player.getDuration();
+        var current = player.getCurrentTime();
+        
+        if (duration > 0) {
+            var percent = (current / duration) * 100;
+            progressFill.style.width = percent + '%';
+            progressText.textContent = Math.round(percent) + '% watched';
+            
+            if (percent >= requiredPercent && !watchedEnough) {
+                markComplete();
+            }
+        }
+    }
+    
+    function markComplete() {
+        watchedEnough = true;
+        if (progressInterval) clearInterval(progressInterval);
+        progressFill.style.width = '100%';
+        progressFill.style.background = '#28a745';
+        progressText.textContent = 'Video complete ✓';
+        btn.className = 'ready';
+    }
+    
+    function goToForm() {
+        if (!watchedEnough) {
+            alert('Please watch at least 90% of the video before continuing.');
+            return;
+        }
+        window.location.href = formUrl;
+    }
+</script>
+
+</body>
+</html>
