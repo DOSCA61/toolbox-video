@@ -13,6 +13,8 @@
         #continueBtn { margin-top: 20px; padding: 15px 40px; font-size: 18px; background-color: #ccc; color: #666; border: none; border-radius: 5px; cursor: not-allowed; }
         #continueBtn.ready { background-color: #28a745; color: white; cursor: pointer; }
         #continueBtn.ready:hover { background-color: #218838; }
+        #unmuteBtn { margin-top: 10px; padding: 10px 25px; font-size: 16px; background-color: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer; display: none; }
+        #unmuteBtn:hover { background-color: #0056b3; }
         #progressContainer { margin-top: 15px; color: #666; }
         #progressBar { width: 100%; height: 8px; background: #e0e0e0; border-radius: 4px; overflow: hidden; margin-top: 8px; }
         #progressFill { height: 100%; background: #007bff; width: 0%; transition: width 0.3s; }
@@ -35,6 +37,8 @@
         <div id="progressBar"><div id="progressFill"></div></div>
         <p id="status">Please watch at least 90% of the video to continue</p>
     </div>
+    
+    <button id="unmuteBtn" onclick="unmuteVideo()">🔊 Click to Enable Sound</button>
     
     <button id="continueBtn" onclick="goToForm()">Continue to Sign-Off</button>
     
@@ -182,6 +186,7 @@
                 videoId: videoId,
                 playerVars: {
                     'autoplay': 1,
+                    'mute': 1,
                     'rel': 0,
                     'modestbranding': 1,
                     'playsinline': 1
@@ -208,6 +213,9 @@
         var player = event.target;
         player.playVideo();
         
+        // Show unmute button since video starts muted for autoplay
+        document.getElementById('unmuteBtn').style.display = 'inline-block';
+        
         // Wait a moment for video metadata to load, then start tracking
         setTimeout(function() {
             setInterval(function() {
@@ -228,6 +236,15 @@
                 }
             }, 500);
         }, 1000);
+    }
+    
+    // ========== Unmute Function ==========
+    function unmuteVideo() {
+        if (window.ytPlayer && typeof window.ytPlayer.unMute === 'function') {
+            window.ytPlayer.unMute();
+            window.ytPlayer.setVolume(100);
+            document.getElementById('unmuteBtn').style.display = 'none';
+        }
     }
     
     // ========== Google Drive Player ==========
