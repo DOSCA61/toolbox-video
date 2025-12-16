@@ -19,6 +19,7 @@
         #status { margin-top: 10px; font-size: 14px; color: #666; }
         #errorMsg { color: #dc3545; margin-top: 20px; padding: 15px; background: #f8d7da; border-radius: 5px; display: none; }
         .gdrive-notice { margin-top: 10px; font-size: 13px; color: #888; }
+        #debugInfo { margin-top: 20px; padding: 10px; background: #f0f0f0; border-radius: 5px; font-size: 12px; text-align: left; display: none; }
     </style>
 </head>
 <body>
@@ -38,13 +39,49 @@
     <button id="continueBtn" onclick="goToForm()">Continue to Sign-Off</button>
     
     <div id="errorMsg">Error: Could not load video. Please check the link or contact your supervisor.</div>
+    
+    <div id="debugInfo"></div>
 </div>
 
 <script>
-    // Get URL parameters
-    var urlParams = new URLSearchParams(window.location.search);
-    var videoURL = urlParams.get('video');
-    var talkId = urlParams.get('talkid');
+    // ========== URL Parameter Parsing ==========
+    // Handle both encoded and non-encoded video URLs
+    function getVideoParam() {
+        var search = window.location.search;
+        
+        // Method 1: Try to extract video URL manually to handle unencoded ampersands
+        var videoMatch = search.match(/[?&]video=([^&]*youtube[^&]*v[=\/][a-zA-Z0-9_-]+)/i);
+        if (videoMatch) {
+            // Check if there's more YouTube URL after (like &t=4s that belongs to YouTube)
+            var afterVideo = search.substring(search.indexOf(videoMatch[0]) + videoMatch[0].length);
+            // If next param looks like YouTube param (t=, list=, etc), it's part of the video URL
+            if (afterVideo.match(/^&(t|list|index|start|end)=/)) {
+                var ytParam = afterVideo.match(/^&(t|list|index|start|end)=[^&]*/);
+                if (ytParam) {
+                    return decodeURIComponent(videoMatch[1]) + ytParam[0];
+                }
+            }
+            return decodeURIComponent(videoMatch[1]);
+        }
+        
+        // Method 2: Standard URLSearchParams (works if URL was properly encoded)
+        var urlParams = new URLSearchParams(search);
+        var video = urlParams.get('video');
+        if (video) {
+            return video;
+        }
+        
+        return null;
+    }
+    
+    function getTalkId() {
+        var urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get('talkid');
+    }
+    
+    // Get parameters
+    var videoURL = getVideoParam();
+    var talkId = getTalkId();
     
     // Elements
     var videoWrapper = document.getElementById('videoWrapper');
@@ -53,6 +90,7 @@
     var statusText = document.getElementById('status');
     var continueBtn = document.getElementById('continueBtn');
     var errorMsg = document.getElementById('errorMsg');
+    var debugInfo = document.getElementById('debugInfo');
     
     // Tracking
     var watchedPercent = 0;
@@ -62,6 +100,10 @@
     // Zoho form URL
     var formUrl = 'https://rascortalks.zohocreatorportal.eu/#Report:Your_Toolbox_Talks?ID=' + talkId;
     
+    // Debug: Show what was parsed (remove this in production)
+    // debugInfo.style.display = 'block';
+    // debugInfo.innerHTML = '<strong>Debug:</strong><br>Video URL: ' + videoURL + '<br>Talk ID: ' + talkId;
+    
     if (videoURL && talkId) {
         
         // Detect video type and extract ID
@@ -70,13 +112,7 @@
         
         if (videoURL.includes('youtube.com') || videoURL.includes('youtu.be')) {
             videoType = 'youtube';
-            if (videoURL.includes('shorts/')) {
-                videoId = videoURL.split('shorts/')[1].split(/[?&]/)[0];
-            } else if (videoURL.includes('v=')) {
-                videoId = videoURL.split('v=')[1].split(/[?&]/)[0];
-            } else if (videoURL.includes('youtu.be/')) {
-                videoId = videoURL.split('youtu.be/')[1].split(/[?&]/)[0];
-            }
+            videoId = extractYouTubeId(videoURL);
         } else if (videoURL.includes('drive.google.com')) {
             videoType = 'gdrive';
             var match = videoURL.match(/\/d\/([a-zA-Z0-9_-]+)/);
@@ -100,43 +136,112 @@
         }
         
     } else {
-        showError('Missing video URL or talk ID in the link.');
+        var missing = [];
+        if (!videoURL) missing.push('video URL');
+        if (!talkId) missing.push('talk ID');
+        showError('Missing ' + missing.join(' and ') + ' in the link.');
+    }
+    
+    // ========== YouTube ID Extraction ==========
+    function extractYouTubeId(url) {
+        // Handle various YouTube URL formats
+        var patterns = [
+            /youtube\.com\/shorts\/([a-zA-Z0-9_-]+)/,      // Shorts
+            /youtube\.com\/embed\/([a-zA-Z0-9_-]+)/,       // Embed
+            /youtube\.com\/v\/([a-zA-Z0-9_-]+)/,           // Old embed
+            /youtube\.com\/watch\?v=([a-zA-Z0-9_-]+)/,     // Standard watch
+            /youtube\.com\/watch\?.*v=([a-zA-Z0-9_-]+)/,   // Watch with other params first
+            /youtu\.be\/([a-zA-Z0-9_-]+)/                  // Short URL
+        ];
+        
+        for (var i = 0; i < patterns.length; i++) {
+            var match = url.match(patterns[i]);
+            if (match && match[1]) {
+                return match[1];
+            }
+        }
+        
+        return null;
     }
     
     // ========== YouTube Player ==========
+    var ytPlayerInstance = null;
+    
     function initYouTube(videoId) {
-        var tag = document.createElement('script');
-        tag.src = 'https://www.youtube.com/iframe_api';
-        var firstScriptTag = document.getElementsByTagName('script')[0];
-        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+        // Create a placeholder div for the player
+        var playerDiv = document.createElement('div');
+        playerDiv.id = 'ytPlayerDiv';
+        videoWrapper.innerHTML = '';
+        videoWrapper.appendChild(playerDiv);
         
-        window.onYouTubeIframeAPIReady = function() {
-            window.ytPlayer = new YT.Player('videoWrapper', {
-                videoId: videoId,
-                playerVars: {
-                    'autoplay': 1,
-                    'rel': 0,
-                    'modestbranding': 1
-                },
-                events: {
-                    'onReady': onYTReady,
-                    'onError': function() { showError('YouTube video failed to load.'); }
-                }
-            });
-        };
+        // Load YouTube API
+        if (window.YT && window.YT.Player) {
+            createYTPlayer(videoId);
+        } else {
+            var tag = document.createElement('script');
+            tag.src = 'https://www.youtube.com/iframe_api';
+            var firstScriptTag = document.getElementsByTagName('script')[0];
+            firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+            
+            window.onYouTubeIframeAPIReady = function() {
+                createYTPlayer(videoId);
+            };
+        }
     }
     
-    function onYTReady(event) {
-        event.target.playVideo();
-        setInterval(function() {
-            if (window.ytPlayer && window.ytPlayer.getDuration) {
-                var duration = window.ytPlayer.getDuration();
-                var current = window.ytPlayer.getCurrentTime();
-                if (duration > 0) {
-                    updateProgress((current / duration) * 100);
+    function createYTPlayer(videoId) {
+        ytPlayerInstance = new YT.Player('ytPlayerDiv', {
+            videoId: videoId,
+            playerVars: {
+                'autoplay': 1,
+                'rel': 0,
+                'modestbranding': 1,
+                'playsinline': 1,
+                'enablejsapi': 1
+            },
+            events: {
+                'onReady': function(event) {
+                    event.target.playVideo();
+                    startYTProgressTracking();
+                },
+                'onStateChange': function(event) {
+                    if (event.data === 1) {
+                        startYTProgressTracking();
+                    }
+                },
+                'onError': function(e) { 
+                    var errorCodes = {
+                        2: 'Invalid video ID',
+                        5: 'HTML5 player error',
+                        100: 'Video not found or private',
+                        101: 'Video cannot be embedded',
+                        150: 'Video cannot be embedded'
+                    };
+                    var errorText = errorCodes[e.data] || 'Unknown error (code: ' + e.data + ')';
+                    showError('YouTube error: ' + errorText); 
                 }
             }
-        }, 1000);
+        });
+        window.ytPlayer = ytPlayerInstance;
+    }
+    
+    var ytTrackingStarted = false;
+    function startYTProgressTracking() {
+        if (ytTrackingStarted) return;
+        ytTrackingStarted = true;
+        
+        setInterval(function() {
+            if (ytPlayerInstance && typeof ytPlayerInstance.getCurrentTime === 'function') {
+                try {
+                    var duration = ytPlayerInstance.getDuration();
+                    var current = ytPlayerInstance.getCurrentTime();
+                    if (duration && duration > 0) {
+                        var percent = (current / duration) * 100;
+                        updateProgress(percent);
+                    }
+                } catch (e) {}
+            }
+        }, 500);
     }
     
     // ========== Google Drive Player ==========
@@ -145,6 +250,7 @@
         iframe.src = 'https://drive.google.com/file/d/' + fileId + '/preview';
         iframe.allow = 'autoplay';
         iframe.id = 'gdrivePlayer';
+        videoWrapper.innerHTML = '';
         videoWrapper.appendChild(iframe);
         
         // Google Drive doesn't expose playback progress via API
@@ -155,6 +261,7 @@
         progressContainer.appendChild(notice);
         
         // Estimate video duration (default 2 minutes, or pass ?duration= param)
+        var urlParams = new URLSearchParams(window.location.search);
         var estimatedDuration = parseInt(urlParams.get('duration')) || 120;
         var startTime = Date.now();
         
