@@ -205,15 +205,28 @@
     }
     
     function onYTReady(event) {
-        event.target.playVideo();
-        setInterval(function() {
-            if (window.ytPlayer && typeof window.ytPlayer.getDuration === 'function') {
-                var duration = window.ytPlayer.getDuration();
-                var current = window.ytPlayer.getCurrentTime();
-                if (duration > 0) {
-                    updateProgress((current / duration) * 100);
+        var player = event.target;
+        player.playVideo();
+        
+        // Wait a moment for video metadata to load, then start tracking
+        setTimeout(function() {
+            setInterval(function() {
+                try {
+                    // Use the player reference from the event, not window.ytPlayer
+                    var state = player.getPlayerState();
+                    // Only track if playing (1) or paused (2) or buffering (3)
+                    if (state === 1 || state === 2 || state === 3) {
+                        var duration = player.getDuration();
+                        var current = player.getCurrentTime();
+                        if (duration && duration > 0 && current >= 0) {
+                            var percent = (current / duration) * 100;
+                            updateProgress(percent);
+                        }
+                    }
+                } catch (e) {
+                    console.log('YouTube tracking error:', e);
                 }
-            }
+            }, 500);
         }, 1000);
     }
     
