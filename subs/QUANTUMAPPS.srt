@@ -1,0 +1,553 @@
+1
+00:00:01,040 --> 00:00:02,160
+Hola a todos.
+
+2
+00:00:02,200 --> 00:00:03,480
+En este video rápido, les voy a mostrar
+
+3
+00:00:03,520 --> 00:00:05,140
+cómo configurar todo lo que
+
+4
+00:00:05,220 --> 00:00:07,700
+necesitan de los correos que han recibido.
+
+5
+00:00:07,740 --> 00:00:09,860
+También repasaremos instrucciones simples sobre
+
+6
+00:00:09,880 --> 00:00:12,320
+cómo usar las diferentes aplicaciones.
+
+7
+00:00:12,360 --> 00:00:15,740
+Instalaremos la aplicación RasCore Site Access, registraremos
+
+8
+00:00:15,750 --> 00:00:18,520
+su dispositivo, y luego configuraremos accesos directos a
+
+9
+00:00:18,620 --> 00:00:21,780
+la aplicación toolbox y SPA /grams.
+
+10
+00:00:22,400 --> 00:00:23,700
+Así que comencemos.
+
+11
+00:00:24,400 --> 00:00:25,820
+Vayan a su correo.
+
+12
+00:00:26,900 --> 00:00:31,720
+Abran el enlace de Google Drive.
+
+13
+00:00:34,160 --> 00:00:35,460
+Entonces en este caso, pueden ver Donal
+
+14
+00:00:35,470 --> 00:00:39,320
+O Scannell, Google Sheets, hoja de cálculo compartida con ustedes,
+
+15
+00:00:39,820 --> 00:00:40,480
+enlaces.
+
+16
+00:00:40,520 --> 00:00:43,160
+Seleccionen eso.
+
+17
+00:00:43,200 --> 00:00:45,060
+Botón azul para abrir.
+
+18
+00:00:46,460 --> 00:00:48,640
+Si tienen múltiples cuentas en su dispositivo,
+
+19
+00:00:48,650 --> 00:00:52,120
+seleccionen la cuenta apropiada.
+
+20
+00:00:53,820 --> 00:00:56,000
+Entonces en la fila tres, tienen la aplicación RasCore Geofence
+
+21
+00:00:56,060 --> 00:00:56,980
+app.
+
+22
+00:00:57,020 --> 00:00:58,240
+Toquen eso.
+
+23
+00:00:59,060 --> 00:01:01,490
+Inicien la cuenta de nuevo, múltiples cuentas, inicien la
+
+24
+00:01:01,520 --> 00:01:03,500
+cuenta apropiada.
+
+25
+00:01:03,560 --> 00:01:04,780
+Acepten eso.
+
+26
+00:01:05,840 --> 00:01:10,000
+Para instalar, solo toquen la flecha hacia abajo.
+
+27
+00:01:12,380 --> 00:01:14,700
+En este punto, la seguridad de su dispositivo
+
+28
+00:01:14,880 --> 00:01:17,540
+puede detenerlos y llevarlos a
+
+29
+00:01:17,720 --> 00:01:21,270
+la, um, configuración de seguridad para permitirles
+
+30
+00:01:21,280 --> 00:01:22,460
+instalar la aplicación.31
+00:01:22,480 --> 00:01:24,180
+En cuyo caso, simplemente sigues los
+
+32
+00:01:24,540 --> 00:01:27,680
+pasos y respondes afirmativamente a todo.
+
+33
+00:01:28,520 --> 00:01:29,840
+Luego te llevará de vuelta a este
+
+34
+00:01:29,900 --> 00:01:34,120
+punto, y simplemente presionas el botón instalar.
+
+35
+00:01:36,600 --> 00:01:37,520
+La aplicación ha sido instalada.
+
+36
+00:01:37,540 --> 00:01:39,660
+Ahora abriremos la aplicación.
+
+37
+00:01:40,860 --> 00:01:42,620
+Cuando se abra la aplicación, te pedirá
+
+38
+00:01:42,660 --> 00:01:44,680
+que registres tu dispositivo, y para
+
+39
+00:01:44,720 --> 00:01:49,100
+hacerlo, simplemente presiona el botón verde de correo
+
+40
+00:01:49,140 --> 00:01:50,580
+de registro.
+
+41
+00:01:50,620 --> 00:01:52,660
+Eso abrirá un correo preformateado, y todo
+
+42
+00:01:52,680 --> 00:01:55,270
+lo que tienes que hacer es enviar ese correo.
+
+43
+00:01:56,940 --> 00:01:58,700
+Una vez que hayas hecho eso, regresarás a
+
+44
+00:01:58,740 --> 00:02:02,120
+la aplicación, y verás un botón azul.
+
+45
+00:02:02,200 --> 00:02:03,120
+Selecciona ese botón.
+
+46
+00:02:03,160 --> 00:02:05,080
+He enviado el correo.
+
+47
+00:02:05,960 --> 00:02:06,830
+Luego te pregunta s-...
+
+48
+00:02:07,060 --> 00:02:10,479
+para permitir que la aplicación RasCore acceda a l-
+
+49
+00:02:10,500 --> 00:02:12,000
+la ubicación de este dispositivo.
+
+50
+00:02:12,040 --> 00:02:13,800
+Queremos la ubicación precisa, y la queremos
+
+51
+00:02:13,820 --> 00:02:15,580
+mientras usamos la aplicación.
+
+52
+00:02:18,000 --> 00:02:20,630
+Ahora queremos permitir acceso todo
+
+53
+00:02:20,680 --> 00:02:21,900
+el tiempo.
+
+54
+00:02:23,520 --> 00:02:26,420
+Luego seleccionaremos la flecha de regreso en
+
+55
+00:02:26,440 --> 00:02:28,560
+la parte superior izquierda de la página.
+
+56
+00:02:30,920 --> 00:02:34,760
+Ahora confirmaremos que permitiremos que RasCore
+
+57
+00:02:34,780 --> 00:02:37,260
+envíe notificaciones.
+
+58
+00:02:39,030 --> 00:02:40,820
+El dispositivo ya ha sido registrado, y el sistema
+
+59
+00:02:40,880 --> 00:02:42,420
+debería detectar tu ubicación actual.
+
+60
+00:02:42,480 --> 00:02:43,410
+Si estás en RasLo-...61
+00:02:43,460 --> 00:02:46,800
+ubicación de RasCore, deberías ver la ubicación actual.
+
+62
+00:02:46,820 --> 00:02:48,950
+Si no ves eso, entonces si
+
+63
+00:02:48,960 --> 00:02:51,620
+miras en la esquina inferior izquierda, eh,
+
+64
+00:02:51,900 --> 00:02:56,320
+en esa barra oscura, verás configuración.
+
+65
+00:02:56,360 --> 00:02:58,280
+Pero como podemos ver, en este caso,
+
+66
+00:02:58,360 --> 00:03:04,280
+la ubicación ha sido encontrada, y eso es perfecto.
+
+67
+00:03:04,400 --> 00:03:08,720
+Entonces, ahora cerraremos esa aplicación.
+
+68
+00:03:09,900 --> 00:03:13,360
+Volvamos a nuestros correos electrónicos.
+
+69
+00:03:15,220 --> 00:03:18,280
+Ahora estamos buscando la invitación para unirse a
+
+70
+00:03:18,320 --> 00:03:21,660
+RasCore Site Attendance, así que vamos a seleccionar
+
+71
+00:03:21,700 --> 00:03:23,320
+eso.
+
+72
+00:03:24,140 --> 00:03:28,060
+Y para registrarse en el portal de Site Attendance,
+
+73
+00:03:28,120 --> 00:03:32,340
+haremos clic en crear nueva contraseña.
+
+74
+00:03:33,940 --> 00:03:35,960
+Ahora, nos gusta usar una contraseña estándar,
+
+75
+00:03:36,000 --> 00:03:37,460
+así que si alguien tiene problemas, podemos rápidamente
+
+76
+00:03:37,480 --> 00:03:39,280
+ayudarte.
+
+77
+00:03:39,300 --> 00:03:44,840
+Y esa contraseña es por ciento por ciento bloom uno
+
+78
+00:03:44,960 --> 00:03:51,100
+dos tres por ciento por ciento.
+
+79
+00:03:53,600 --> 00:03:56,080
+Volveremos a ingresar esa contraseña, solo verificaremos rápidamente que
+
+80
+00:03:56,120 --> 00:04:00,780
+sean iguales, y luego confirmamos.
+
+81
+00:04:01,940 --> 00:04:07,860
+Esto ahora lanza la aplicación SPA
+
+82
+00:04:08,620 --> 00:04:10,440
+RasCore Site Attendance.
+
+83
+00:04:10,460 --> 00:04:12,140
+Y simplemente tomas una fotografía de tu
+
+84
+00:04:12,220 --> 00:04:15,860
+SPA y envías.
+
+85
+00:04:18,160 --> 00:04:19,440
+Lo que también haremos ahora es crear un
+
+86
+00:04:19,500 --> 00:04:22,640
+acceso directo a esta aplicación en tu teléfono
+
+87
+00:04:22,680 --> 00:04:24,520
+seleccionando el botón de flecha hacia abajo.
+
+88
+00:04:26,520 --> 00:04:28,690
+Y podemos ver que apareció una pregunta,
+
+89
+00:04:28,760 --> 00:04:31,220
+"¿Agregar este sitio web a la pantalla de aplicaciones?"
+
+90
+00:04:31,260 --> 00:04:32,420
+Así que vamos a agregar eso.
+
+91
+00:04:32,440 --> 00:04:32,820
+Está bien.
+
+92
+00:04:32,840 --> 00:04:36,800
+También podemos marcar esto con estrella, eh, creando un
+
+93
+00:04:37,200 --> 00:04:38,060
+marcador.
+
+94
+00:04:39,240 --> 00:04:40,300
+Así que esa es esa aplicación.
+
+95
+00:04:40,320 --> 00:04:42,960
+Ahora iremos a la segunda aplicación.
+
+96
+00:04:43,320 --> 00:04:48,140
+Volvamos a nuestros correos electrónicos, y tenemos
+
+97
+00:04:48,180 --> 00:04:50,840
+una invitación ahí para unirse al portal Toolbox Talks.
+
+98
+00:04:50,860 --> 00:04:52,460
+Seleccionaremos eso.
+
+99
+00:04:52,480 --> 00:04:53,920
+Como el mismo proceso, crearemos una nueva
+
+100
+00:04:53,980 --> 00:04:55,180
+contraseña.101
+00:04:56,740 --> 00:04:58,840
+Ingresaremos la contraseña nuevamente.
+
+102
+00:04:58,860 --> 00:05:03,360
+Si la mantienes estándar, por ciento por ciento B-L
+
+103
+00:05:03,840 --> 00:05:07,480
+bloom uno dos tres por ciento por ciento.
+
+104
+00:05:07,500 --> 00:05:08,980
+Bien, ambas son iguales.
+
+105
+00:05:09,000 --> 00:05:12,420
+Confirmamos.
+
+106
+00:05:12,920 --> 00:05:15,540
+Eso nos ha llevado a Charlas de Herramientas.
+
+107
+00:05:16,120 --> 00:05:17,640
+Así que en este momento, no hay Charlas
+
+108
+00:05:17,680 --> 00:05:21,640
+de Herramientas allí para ti, y eso está bien.
+
+109
+00:05:21,680 --> 00:05:22,680
+Así que lo que haremos ahora es
+
+110
+00:05:22,700 --> 00:05:24,840
+agregar esta aplicación a nuestros accesos directos también
+
+111
+00:05:24,880 --> 00:05:27,600
+seleccionando la flecha hacia abajo en el
+
+112
+00:05:27,640 --> 00:05:33,920
+lado derecho de la pantalla y seleccionar agregar.
+
+113
+00:05:36,760 --> 00:05:38,580
+También podemos agregar esto a nuestros marcadores
+
+114
+00:05:38,640 --> 00:05:41,340
+seleccionando la estrella.
+
+115
+00:05:42,300 --> 00:05:46,960
+Esas son las dos instaladas.
+
+116
+00:05:48,440 --> 00:05:51,960
+Así que lo que haremos ahora es enviar
+
+117
+00:05:52,620 --> 00:05:54,640
+un correo electrónico a la aplicación.
+
+118
+00:05:54,680 --> 00:05:56,520
+Esto tomará un minuto, así que solo
+
+119
+00:05:56,600 --> 00:05:57,140
+esperaremos.
+
+120
+00:05:57,200 --> 00:06:00,720
+Entonces, ahora hemos recibido la notifi- notificación del
+
+121
+00:06:00,760 --> 00:06:03,120
+sistema pidiéndonos completar la Charla de
+
+122
+00:06:03,200 --> 00:06:08,420
+Herramientas, así que seleccionaremos la charla, y
+
+123
+00:06:08,440 --> 00:06:09,280
+estableceremos el enlace.
+
+124
+00:06:09,320 --> 00:06:11,650
+Así que se ha programado una Charla de Herramientas para ti.
+
+125
+00:06:11,660 --> 00:06:13,540
+Selecciona el enlace de abajo para acceder a tus charlas.
+
+126
+00:06:13,580 --> 00:06:15,140
+Selecciona el enlace.
+
+127
+00:06:16,700 --> 00:06:17,780
+Y ahí está nuestra charla.
+
+128
+00:06:18,680 --> 00:06:23,540
+Si rotamos la pantalla de lado y actualizamos
+
+129
+00:06:23,580 --> 00:06:30,060
+esa página, podemos ver que se ha
+
+130
+00:06:30,100 --> 00:06:31,080
+agregado un archivo a esto.
+
+131
+00:06:31,680 --> 00:06:36,060
+Ese archivo es tu formato familiar original, el cual
+
+132
+00:06:36,100 --> 00:06:39,560
+puedes seleccionar y revisarlo.
+
+133
+00:06:39,580 --> 00:06:40,880
+Pero lo que queremos que hagas es
+
+134
+00:06:40,980 --> 00:06:44,460
+confirmar que has leído esa, eh, charla.
+
+135
+00:06:44,520 --> 00:06:49,600
+Así que solo toca en "Trabajar en Clima Caluroso".
+
+136
+00:06:51,340 --> 00:06:53,860
+Y puedes ver la sección uno ahí.
+
+137
+00:06:53,920 --> 00:06:57,820
+Entonces, cada Charla de Herramientas tendrá hasta
+
+138
+00:06:57,840 --> 00:07:01,040
+un máximo de siete secciones, y lo que
+
+139
+00:07:01,060 --> 00:07:02,480
+harás es confirmar que has
+
+140
+00:07:02,520 --> 00:07:55,840
+leído cada sección.
