@@ -1,0 +1,550 @@
+1
+00:00:01,040 --> 00:00:02,160
+Salut tout le monde.
+
+2
+00:00:02,200 --> 00:00:03,480
+Dans cette vidéo rapide, je vais vous expliquer
+
+3
+00:00:03,520 --> 00:00:05,140
+comment configurer tout ce dont vous
+
+4
+00:00:05,220 --> 00:00:07,700
+avez besoin à partir des emails reçus.
+
+5
+00:00:07,740 --> 00:00:09,860
+Nous passerons également en revue des instructions simples sur
+
+6
+00:00:09,880 --> 00:00:12,320
+comment utiliser les différentes applications.
+
+7
+00:00:12,360 --> 00:00:15,740
+Nous installerons l'application RasCore Site Access, enregistrerons
+
+8
+00:00:15,750 --> 00:00:18,520
+votre appareil, puis configurerons des raccourcis vers
+
+9
+00:00:18,620 --> 00:00:21,780
+la boîte à outils et l'application SPA /grams.
+
+10
+00:00:22,400 --> 00:00:23,700
+Alors, commençons.
+
+11
+00:00:24,400 --> 00:00:25,820
+Allez dans vos emails.
+
+12
+00:00:26,900 --> 00:00:31,720
+Ouvrez le lien Google Drive.
+
+13
+00:00:34,160 --> 00:00:35,460
+Donc dans ce cas, vous pouvez voir Donal
+
+14
+00:00:35,470 --> 00:00:39,320
+O Scannell, Google Sheets, feuille de calcul partagée avec vous,
+
+15
+00:00:39,820 --> 00:00:40,480
+liens.
+
+16
+00:00:40,520 --> 00:00:43,160
+Sélectionnez cela.
+
+17
+00:00:43,200 --> 00:00:45,060
+Bouton bleu pour ouvrir.
+
+18
+00:00:46,460 --> 00:00:48,640
+Si vous avez plusieurs comptes sur votre appareil,
+
+19
+00:00:48,650 --> 00:00:52,120
+sélectionnez le compte approprié.
+
+20
+00:00:53,820 --> 00:00:56,000
+Donc à la ligne trois, vous avez l'application RasCore Geofence
+
+21
+00:00:56,060 --> 00:00:56,980
+app.
+
+22
+00:00:57,020 --> 00:00:58,240
+Appuyez dessus.
+
+23
+00:00:59,060 --> 00:01:01,490
+Démarrez le compte à nouveau, plusieurs comptes, démarrez le
+
+24
+00:01:01,520 --> 00:01:03,500
+compte approprié.
+
+25
+00:01:03,560 --> 00:01:04,780
+D'accord pour cela.
+
+26
+00:01:05,840 --> 00:01:10,000
+Pour installer, appuyez simplement sur la flèche vers le bas.
+
+27
+00:01:12,380 --> 00:01:14,700
+À ce moment-là, la sécurité de votre appareil
+
+28
+00:01:14,880 --> 00:01:17,540
+peut vous arrêter et vous amener aux
+
+29
+00:01:17,720 --> 00:01:21,270
+paramètres de sécurité pour vous permettre
+
+30
+00:01:21,280 --> 00:01:22,460
+d'installer l'application.31
+00:01:22,480 --> 00:01:24,180
+Dans ce cas, vous parcourez simplement les
+
+32
+00:01:24,540 --> 00:01:27,680
+étapes et répondez par l'affirmative à tout.
+
+33
+00:01:28,520 --> 00:01:29,840
+Cela vous ramènera alors à ce
+
+34
+00:01:29,900 --> 00:01:34,120
+point, et vous appuyez simplement sur le bouton d'installation.
+
+35
+00:01:36,600 --> 00:01:37,520
+L'application a été installée.
+
+36
+00:01:37,540 --> 00:01:39,660
+Nous allons maintenant ouvrir l'application.
+
+37
+00:01:40,860 --> 00:01:42,620
+Quand l'application s'ouvre, elle vous demandera
+
+38
+00:01:42,660 --> 00:01:44,680
+d'enregistrer votre appareil, et pour cela,
+
+39
+00:01:44,720 --> 00:01:49,100
+appuyez simplement sur le bouton vert d'email d'enregistrement.
+
+40
+00:01:49,140 --> 00:01:50,580
+
+41
+00:01:50,620 --> 00:01:52,660
+Cela ouvrira un email préformaté, et tout
+
+42
+00:01:52,680 --> 00:01:55,270
+ce que vous avez à faire est d'envoyer cet email.
+
+43
+00:01:56,940 --> 00:01:58,700
+Une fois que vous avez fait cela, vous reviendrez à
+
+44
+00:01:58,740 --> 00:02:02,120
+l'application, et vous verrez un bouton bleu.
+
+45
+00:02:02,200 --> 00:02:03,120
+Sélectionnez ce bouton.
+
+46
+00:02:03,160 --> 00:02:05,080
+J'ai envoyé l'email.
+
+47
+00:02:05,960 --> 00:02:06,830
+Il vous demande ensuite d-...
+
+48
+00:02:07,060 --> 00:02:10,479
+d'autoriser l'application RasCore à accéder à l-
+
+49
+00:02:10,500 --> 00:02:12,000
+la localisation de cet appareil.
+
+50
+00:02:12,040 --> 00:02:13,800
+Nous voulons la localisation précise, et nous la voulons
+
+51
+00:02:13,820 --> 00:02:15,580
+pendant l'utilisation de l'application.
+
+52
+00:02:18,000 --> 00:02:20,630
+Nous voulons maintenant autoriser l'accès tout
+
+53
+00:02:20,680 --> 00:02:21,900
+le temps.
+
+54
+00:02:23,520 --> 00:02:26,420
+Nous sélectionnerons alors la flèche de retour en
+
+55
+00:02:26,440 --> 00:02:28,560
+haut à gauche de la page.
+
+56
+00:02:30,920 --> 00:02:34,760
+Nous confirmerons maintenant que nous autoriserons RasCore
+
+57
+00:02:34,780 --> 00:02:37,260
+à envoyer des notifications.
+
+58
+00:02:39,030 --> 00:02:40,820
+L'appareil a maintenant été enregistré, et le système
+
+59
+00:02:40,880 --> 00:02:42,420
+devrait détecter votre localisation actuelle.
+
+60
+00:02:42,480 --> 00:02:43,410
+Si vous êtes sur RasLo-...61
+00:02:43,460 --> 00:02:46,800
+Localisation RasCore, vous devriez voir l'emplacement actuel.
+
+62
+00:02:46,820 --> 00:02:48,950
+Si vous ne le voyez pas, alors si
+
+63
+00:02:48,960 --> 00:02:51,620
+vous regardez en bas dans le coin gauche, euh,
+
+64
+00:02:51,900 --> 00:02:56,320
+sur cette barre sombre, vous verrez paramètres.
+
+65
+00:02:56,360 --> 00:02:58,280
+Mais comme nous pouvons le voir, dans ce cas,
+
+66
+00:02:58,360 --> 00:03:04,280
+l'emplacement a été trouvé, et c'est parfait.
+
+67
+00:03:04,400 --> 00:03:08,720
+Donc, nous allons maintenant fermer cette application.
+
+68
+00:03:09,900 --> 00:03:13,360
+Retournons à nos emails.
+
+69
+00:03:15,220 --> 00:03:18,280
+Maintenant nous cherchons l'invitation à rejoindre
+
+70
+00:03:18,320 --> 00:03:21,660
+RasCore Site Attendance, donc nous allons sélectionner
+
+71
+00:03:21,700 --> 00:03:23,320
+cela.
+
+72
+00:03:24,140 --> 00:03:28,060
+Et pour s'inscrire au portail Site Attendance,
+
+73
+00:03:28,120 --> 00:03:32,340
+nous cliquerons sur créer un nouveau mot de passe.
+
+74
+00:03:33,940 --> 00:03:35,960
+Maintenant, nous aimons utiliser un mot de passe standard,
+
+75
+00:03:36,000 --> 00:03:37,460
+donc si quelqu'un a des problèmes, nous pouvons rapidement
+
+76
+00:03:37,480 --> 00:03:39,280
+vous aider.
+
+77
+00:03:39,300 --> 00:03:44,840
+Et ce mot de passe est pourcentage pourcentage bloom un
+
+78
+00:03:44,960 --> 00:03:51,100
+deux trois pourcentage pourcentage.
+
+79
+00:03:53,600 --> 00:03:56,080
+Nous ressaisirons ce mot de passe, vérifions rapidement qu'
+
+80
+00:03:56,120 --> 00:04:00,780
+ils sont identiques, et ensuite nous confirmons.
+
+81
+00:04:01,940 --> 00:04:07,860
+Ceci lance maintenant l'application RasCore Site Attendance SPA
+
+82
+00:04:08,620 --> 00:04:10,440
+.
+
+83
+00:04:10,460 --> 00:04:12,140
+Et vous prenez simplement une photo de votre
+
+84
+00:04:12,220 --> 00:04:15,860
+SPA et soumettez.
+
+85
+00:04:18,160 --> 00:04:19,440
+Ce que nous allons aussi faire maintenant c'est créer un
+
+86
+00:04:19,500 --> 00:04:22,640
+raccourci vers cette application sur votre téléphone en
+
+87
+00:04:22,680 --> 00:04:24,520
+sélectionnant le bouton flèche vers le bas.
+
+88
+00:04:26,520 --> 00:04:28,690
+Et nous pouvons voir qu'une question est apparue
+
+89
+00:04:28,760 --> 00:04:31,220
+, "Ajouter ce site web à l'écran des applications ?"
+
+90
+00:04:31,260 --> 00:04:32,420
+Donc nous allons ajouter cela.91
+00:04:32,440 --> 00:04:32,820
+D'accord.
+
+92
+00:04:32,840 --> 00:04:36,800
+Nous pouvons aussi marquer ceci d'une étoile, euh, créer un
+
+93
+00:04:37,200 --> 00:04:38,060
+signet.
+
+94
+00:04:39,240 --> 00:04:40,300
+Voilà pour cette application.
+
+95
+00:04:40,320 --> 00:04:42,960
+Nous allons maintenant passer à la deuxième application.
+
+96
+00:04:43,320 --> 00:04:48,140
+Retournons à nos emails, et nous avons
+
+97
+00:04:48,180 --> 00:04:50,840
+une invitation là pour rejoindre le portail Toolbox Talks.
+
+98
+00:04:50,860 --> 00:04:52,460
+Nous allons sélectionner cela.
+
+99
+00:04:52,480 --> 00:04:53,920
+Comme le même processus, nous allons créer un nouveau
+
+100
+00:04:53,980 --> 00:04:55,180
+mot de passe.
+
+101
+00:04:56,740 --> 00:04:58,840
+Nous allons entrer le mot de passe à nouveau.
+
+102
+00:04:58,860 --> 00:05:03,360
+Si vous le gardez standard, pourcent pourcent B-L
+
+103
+00:05:03,840 --> 00:05:07,480
+bloom un deux trois pourcent pourcent.
+
+104
+00:05:07,500 --> 00:05:08,980
+D'accord, les deux sont identiques.
+
+105
+00:05:09,000 --> 00:05:12,420
+Nous confirmons.
+
+106
+00:05:12,920 --> 00:05:15,540
+Cela nous a amenés dans Toolbox Talks.
+
+107
+00:05:16,120 --> 00:05:17,640
+Donc pour le moment, il n'y a pas de Toolbox
+
+108
+00:05:17,680 --> 00:05:21,640
+Talks là pour vous, et c'est bien.
+
+109
+00:05:21,680 --> 00:05:22,680
+Donc ce que nous allons faire maintenant c'est que nous
+
+110
+00:05:22,700 --> 00:05:24,840
+allons ajouter cette application à notre raccourci aussi
+
+111
+00:05:24,880 --> 00:05:27,600
+en sélectionnant la flèche vers le bas sur le
+
+112
+00:05:27,640 --> 00:05:33,920
+côté droit de l'écran et sélectionner ajouter.
+
+113
+00:05:36,760 --> 00:05:38,580
+Nous pouvons aussi ajouter ceci à nos signets
+
+114
+00:05:38,640 --> 00:05:41,340
+en sélectionnant l'étoile.
+
+115
+00:05:42,300 --> 00:05:46,960
+Voilà les deux installées.
+
+116
+00:05:48,440 --> 00:05:51,960
+Donc ce que nous allons faire maintenant c'est que nous allons envoyer
+
+117
+00:05:52,620 --> 00:05:54,640
+un email à l'application.
+
+118
+00:05:54,680 --> 00:05:56,520
+Cela prendra une minute, donc nous allons juste
+
+119
+00:05:56,600 --> 00:05:57,140
+attendre.
+
+120
+00:05:57,200 --> 00:06:00,720
+Donc, nous avons maintenant reçu la notif- notification de121
+00:06:00,760 --> 00:06:03,120
+le système nous demande de compléter la Toolbox
+
+122
+00:06:03,200 --> 00:06:08,420
+Talk, donc nous sélectionnerons la discussion, et
+
+123
+00:06:08,440 --> 00:06:09,280
+nous définirons le lien.
+
+124
+00:06:09,320 --> 00:06:11,650
+Donc les Toolbox Talks ont été programmées pour vous.
+
+125
+00:06:11,660 --> 00:06:13,540
+Sélectionnez le lien ci-dessous pour accéder à vos discussions.
+
+126
+00:06:13,580 --> 00:06:15,140
+Sélectionnez le lien.
+
+127
+00:06:16,700 --> 00:06:17,780
+Et voilà notre discussion.
+
+128
+00:06:18,680 --> 00:06:23,540
+Si nous faisons pivoter l'écran sur le côté et actualisons
+
+129
+00:06:23,580 --> 00:06:30,060
+cette page, nous pouvons voir qu'un fichier
+
+130
+00:06:30,100 --> 00:06:31,080
+a été ajouté à cela.
+
+131
+00:06:31,680 --> 00:06:36,060
+Ce fichier est votre format familier original, que
+
+132
+00:06:36,100 --> 00:06:39,560
+vous pouvez alors sélectionner et examiner.
+
+133
+00:06:39,580 --> 00:06:40,880
+Mais ce que nous voulons que vous fassiez, c'est
+
+134
+00:06:40,980 --> 00:06:44,460
+confirmer que vous avez lu cette, euh, discussion.
+
+135
+00:06:44,520 --> 00:06:49,600
+Alors tapez simplement sur "Travailler par temps chaud".
+
+136
+00:06:51,340 --> 00:06:53,860
+Et vous pouvez voir la section un là.
+
+137
+00:06:53,920 --> 00:06:57,820
+Donc, chaque Toolbox Talk aura jusqu'à
+
+138
+00:06:57,840 --> 00:07:01,040
+un maximum de sept sections, et ce que vous
+
+139
+00:07:01,060 --> 00:07:02,480
+ferez c'est que vous confirmerez que vous avez
+
+140
+00:07:02,520 --> 00:07:55,840
+lu chaque section.
