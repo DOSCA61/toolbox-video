@@ -1,0 +1,15 @@
+1
+00:00:01,000 --> 00:00:04,000
+Olá, bem-vindos ao nosso canal!
+
+2
+00:00:04,500 --> 00:00:08,000
+Hoje vamos aprender sobre inteligência artificial.
+
+3
+00:00:08,500 --> 00:00:12,000
+Este é um tópico muito interessante e importante.
+
+4
+00:00:12,500 --> 00:00:15,000
+Vamos começar com o básico.
