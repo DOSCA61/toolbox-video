@@ -1,0 +1,15 @@
+1
+00:00:01,000 --> 00:00:04,000
+Hola, bienvenidos a nuestro canal de YouTube.
+
+2
+00:00:05,000 --> 00:00:08,000
+Hoy vamos a aprender sobre inteligencia artificial.
+
+3
+00:00:10,000 --> 00:00:13,000
+Es un tema muy fascinante e importante.
+
+4
+00:00:15,000 --> 00:00:18,000
+Empecemos con lo básico.
