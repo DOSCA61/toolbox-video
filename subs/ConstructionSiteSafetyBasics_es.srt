@@ -12,4 +12,18 @@ Es un tema muy fascinante e importante.
 
 4
 00:00:15,000 --> 00:00:18,000
-Empecemos con lo básico.
+Empecemos con lo básico.1
+00:00:01,000 --> 00:00:04,000
+Hola, ¿cómo estás hoy?
+
+2
+00:00:05,000 --> 00:00:08,000
+Estoy bien, gracias por preguntar.
+
+3
+00:00:09,000 --> 00:00:12,000
+¿Te gustaría ir al parque?
+
+4
+00:00:13,000 --> 00:00:16,000
+Sí, eso suena divertido.
