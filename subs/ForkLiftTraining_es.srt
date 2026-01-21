@@ -1,0 +1,15 @@
+1
+00:00:01,000 --> 00:00:04,000
+Hola, bienvenidos a nuestro tutorial de cocina
+
+2
+00:00:05,000 --> 00:00:08,000
+Hoy aprenderemos a hacer pasta casera
+
+3
+00:00:09,000 --> 00:00:12,000
+Primero, necesitarás estos ingredientes
+
+4
+00:00:13,000 --> 00:00:16,000
+Harina, huevos, sal y aceite de oliva
