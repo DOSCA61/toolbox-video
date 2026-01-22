@@ -1,0 +1,31 @@
+1
+00:00:01,000 --> 00:00:04,000
+Bonjour et bienvenue dans notre cours de cuisine !
+
+2
+00:00:05,000 --> 00:00:08,000
+Aujourd'hui, nous allons apprendre à faire des pâtes parfaites.
+
+3
+00:00:10,000 --> 00:00:13,000
+D'abord, faites bouillir une grande casserole d'eau salée.
+
+4
+00:00:15,000 --> 00:00:18,000
+Ajoutez les pâtes quand l'eau bout vigoureusement.
+
+5
+00:00:20,000 --> 00:00:23,000
+Remuez occasionnellement pour éviter qu'elles collent.
+
+6
+00:00:25,000 --> 00:00:28,000
+Goûtez pour vérifier la cuisson après 8-10 minutes.
+
+7
+00:00:30,000 --> 00:00:33,000
+Égouttez les pâtes mais gardez un peu d'eau de cuisson.
+
+8
+00:00:35,000 --> 00:00:38,000
+Mélangez avec votre sauce préférée et servez immédiatement !
