@@ -18,8 +18,8 @@
     #progressFill { height: 100%; background: #007bff; width: 0%; transition: width 0.3s; }
     #status { margin-top: 10px; font-size: 14px; color: #666; }
     #errorMsg { color: #dc3545; margin-top: 20px; padding: 15px; background: #f8d7da; border-radius: 5px; display: none; }
-    .gdrive-notice { margin-top: 10px; font-size: 13px; color: #888; }
-    #muteNotice { background: #fff3cd; color: #856404; padding: 10px; border-radius: 5px; margin-bottom: 15px; display: none; }
+    #muteNotice { background: #fff3cd; color: #856404; padding: 10px; border-radius: 5px; margin-bottom: 15px; display: none; cursor: pointer; }
+    #muteNotice:hover { background: #ffe69c; }
 
     .subtitle-overlay {
       position: absolute;
@@ -48,7 +48,7 @@
 <div class="video-container">
   <h2 class="video-title">Safety Briefing - Please Watch Before Signing Off</h2>
 
-  <div id="muteNotice">🔇 Video started muted for autoplay. Click the video to unmute.</div>
+  <div id="muteNotice" onclick="unmuteVideo()">🔇 Video is muted. Click here to enable sound.</div>
 
   <div id="videoWrapper">
     <div id="subtitleBox" class="subtitle-overlay"></div>
@@ -102,13 +102,27 @@
   var muteNotice = document.getElementById('muteNotice');
 
   // ========== ANTI-SKIP TRACKING ==========
-  // Track actual seconds watched, not video position
-  var secondsWatched = {};  // Store each second watched
+  var secondsWatched = {};
   var videoDuration = 0;
   var canProceed = false;
   var requiredPercent = 90;
 
+  // Store reference to current player for unmute function
+  var currentPlayer = null;
+  var playerType = null;
+
   var formUrl = 'https://rascortalks.zohocreatorportal.eu/#Report:Your_Toolbox_Talks?ID=' + talkId;
+
+  // ========== Global Unmute Function ==========
+  function unmuteVideo() {
+    if (playerType === 'direct' && currentPlayer) {
+      currentPlayer.muted = false;
+      muteNotice.style.display = 'none';
+    } else if (playerType === 'youtube' && currentPlayer && typeof currentPlayer.unMute === 'function') {
+      currentPlayer.unMute();
+      muteNotice.style.display = 'none';
+    }
+  }
 
   // ========== Subtitles ==========
   var SUBS = [];
@@ -216,6 +230,7 @@
 
   // ========== YouTube Player ==========
   var ytPlayer = null;
+  var ytRetried = false;
 
   function initYouTube(videoId) {
     var playerDiv = document.createElement('div');
@@ -239,19 +254,43 @@
       videoId: videoId,
       playerVars: {
         'autoplay': 1,
-        'mute': 1,  // MUTED for autoplay to work
+        'mute': 0,  // Try with sound first
         'rel': 0,
         'modestbranding': 1,
         'playsinline': 1,
-        'disablekb': 1,  // Disable keyboard shortcuts
+        'disablekb': 1,
         'controls': 1
       },
       events: {
         'onReady': function(e) {
-          muteNotice.style.display = 'block';
-          e.target.playVideo();
+          currentPlayer = ytPlayer;
+          playerType = 'youtube';
           videoDuration = e.target.getDuration();
+          
+          // Try to play with sound
+          var playPromise = e.target.playVideo();
+          
+          // Check after short delay if playing
+          setTimeout(function() {
+            var state = ytPlayer.getPlayerState();
+            // If not playing (state !== 1), mute and retry
+            if (state !== 1) {
+              ytPlayer.mute();
+              ytPlayer.playVideo();
+              muteNotice.style.display = 'block';
+            }
+          }, 1000);
+          
           startYTTracking();
+        },
+        'onStateChange': function(e) {
+          // If unstarted or cued and not yet retried, try muted
+          if ((e.data === -1 || e.data === 5) && !ytRetried) {
+            ytRetried = true;
+            ytPlayer.mute();
+            ytPlayer.playVideo();
+            muteNotice.style.display = 'block';
+          }
         },
         'onError': function(e) {
           showError('YouTube error: ' + e.data);
@@ -266,7 +305,6 @@
         var current = ytPlayer.getCurrentTime();
         var state = ytPlayer.getPlayerState();
         
-        // Only count if actually playing (state 1)
         if (state === 1) {
           markSecondWatched(current);
         }
@@ -282,8 +320,6 @@
     var video = document.createElement('video');
     video.src = url;
     video.controls = true;
-    video.autoplay = true;
-    video.muted = true;  // MUTED for autoplay
     video.playsInline = true;
     video.id = 'directPlayer';
     
@@ -291,18 +327,34 @@
     videoWrapper.appendChild(video);
     videoWrapper.appendChild(subtitleBox);
 
-    muteNotice.style.display = 'block';
+    currentPlayer = video;
+    playerType = 'direct';
 
     video.addEventListener('loadedmetadata', function() {
       videoDuration = video.duration;
     });
+
+    // Try autoplay WITH sound first
+    video.muted = false;
+    var playPromise = video.play();
+    
+    if (playPromise !== undefined) {
+      playPromise.then(function() {
+        // Success - playing with sound
+        muteNotice.style.display = 'none';
+      }).catch(function() {
+        // Blocked - retry muted
+        video.muted = true;
+        video.play();
+        muteNotice.style.display = 'block';
+      });
+    }
 
     // Track only while playing
     var lastTime = 0;
     video.addEventListener('timeupdate', function() {
       var current = video.currentTime;
       
-      // Only mark as watched if progressing naturally (not seeking)
       if (Math.abs(current - lastTime) < 2) {
         markSecondWatched(current);
       }
@@ -312,21 +364,12 @@
       updateSubtitlesAtTime(current);
     });
 
-    // Detect seeking - don't penalize but don't reward either
     video.addEventListener('seeking', function() {
       lastTime = video.currentTime;
     });
 
     video.addEventListener('error', function() {
       showError('Failed to load video file.');
-    });
-
-    // Unmute on first click
-    video.addEventListener('click', function() {
-      if (video.muted) {
-        video.muted = false;
-        muteNotice.style.display = 'none';
-      }
     });
   }
 
@@ -339,7 +382,8 @@
     videoWrapper.appendChild(iframe);
     videoWrapper.appendChild(subtitleBox);
 
-    // Can't track GDrive properly - use time-based
+    playerType = 'gdrive';
+
     var urlParams = new URLSearchParams(window.location.search);
     var estimatedDuration = parseInt(urlParams.get('duration')) || 120;
     videoDuration = estimatedDuration;
