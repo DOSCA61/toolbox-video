@@ -19,32 +19,26 @@
     #status { margin-top: 10px; font-size: 14px; color: #666; }
     #errorMsg { color: #dc3545; margin-top: 20px; padding: 15px; background: #f8d7da; border-radius: 5px; display: none; }
     .gdrive-notice { margin-top: 10px; font-size: 13px; color: #888; }
-    #debugInfo { margin-top: 20px; padding: 10px; background: #f0f0f0; border-radius: 5px; font-size: 12px; text-align: left; display: none; }
+    #muteNotice { background: #fff3cd; color: #856404; padding: 10px; border-radius: 5px; margin-bottom: 15px; display: none; }
 
-    /* ====== Subtitles overlay ====== */
-    .subtitle-overlay{
-      position:absolute;
-      left:50%;
-      bottom:6%;
-      transform:translateX(-50%);
-      width:92%;
-      max-width:760px;
-      padding:10px 14px;
-      border-radius:10px;
-      background:rgba(0,0,0,0.65);
-      color:#fff;
-      font-size:20px;
-      line-height:1.35;
-      text-align:center;
-      text-shadow:0 2px 6px rgba(0,0,0,0.6);
-      pointer-events:none;
-      display:none; /* shown when subs load */
-      white-space:pre-line; /* allow \n in subtitle text */
-    }
-    .subtitle-small{
-      font-size:16px;
-      opacity:0.9;
-      margin-top:6px;
+    .subtitle-overlay {
+      position: absolute;
+      left: 50%;
+      bottom: 6%;
+      transform: translateX(-50%);
+      width: 92%;
+      max-width: 760px;
+      padding: 10px 14px;
+      border-radius: 10px;
+      background: rgba(0,0,0,0.65);
+      color: #fff;
+      font-size: 20px;
+      line-height: 1.35;
+      text-align: center;
+      text-shadow: 0 2px 6px rgba(0,0,0,0.6);
+      pointer-events: none;
+      display: none;
+      white-space: pre-line;
     }
   </style>
 </head>
@@ -54,9 +48,9 @@
 <div class="video-container">
   <h2 class="video-title">Safety Briefing - Please Watch Before Signing Off</h2>
 
+  <div id="muteNotice">🔇 Video started muted for autoplay. Click the video to unmute.</div>
+
   <div id="videoWrapper">
-    <!-- Video player inserted here by JavaScript -->
-    <!-- Subtitles overlay lives on top of the player -->
     <div id="subtitleBox" class="subtitle-overlay"></div>
   </div>
 
@@ -67,83 +61,56 @@
 
   <button id="continueBtn" onclick="goToForm()">Continue to Sign-Off</button>
 
-  <div id="errorMsg">Error: Could not load video. Please check the link or contact your supervisor.</div>
-
-  <div id="debugInfo"></div>
+  <div id="errorMsg"></div>
 </div>
 
 <script>
   // ========== URL Parameter Parsing ==========
-  // Handle both encoded and non-encoded video URLs
   function getVideoParam() {
     var search = window.location.search;
-
-    // Method 1: Try to extract video URL manually to handle unencoded ampersands
     var videoMatch = search.match(/[?&]video=([^&]*youtube[^&]*v[=\/][a-zA-Z0-9_-]+)/i);
     if (videoMatch) {
-      // Check if there's more YouTube URL after (like &t=4s that belongs to YouTube)
       var afterVideo = search.substring(search.indexOf(videoMatch[0]) + videoMatch[0].length);
-      // If next param looks like YouTube param (t=, list=, etc), it's part of the video URL
       if (afterVideo.match(/^&(t|list|index|start|end)=/)) {
         var ytParam = afterVideo.match(/^&(t|list|index|start|end)=[^&]*/);
-        if (ytParam) {
-          return decodeURIComponent(videoMatch[1]) + ytParam[0];
-        }
+        if (ytParam) return decodeURIComponent(videoMatch[1]) + ytParam[0];
       }
       return decodeURIComponent(videoMatch[1]);
     }
-
-    // Method 2: Standard URLSearchParams (works if URL was properly encoded)
     var urlParams = new URLSearchParams(search);
-    var video = urlParams.get('video');
-    if (video) {
-      return video;
-    }
-
-    return null;
+    return urlParams.get('video');
   }
 
   function getTalkId() {
-    var urlParams = new URLSearchParams(window.location.search);
-    return urlParams.get('talkid');
+    return new URLSearchParams(window.location.search).get('talkid');
   }
 
-  // NEW: optional subtitles URL param: ?subs=https://.../captions.srt
   function getSubsParam() {
-    var urlParams = new URLSearchParams(window.location.search);
-    return urlParams.get('srt'); // URL to .srt or .json
+    return new URLSearchParams(window.location.search).get('srt');
   }
 
-  // Get parameters
   var videoURL = getVideoParam();
   var talkId = getTalkId();
   var subsURL = getSubsParam();
 
-  // Elements
   var videoWrapper = document.getElementById('videoWrapper');
   var progressFill = document.getElementById('progressFill');
-  var progressContainer = document.getElementById('progressContainer');
   var statusText = document.getElementById('status');
   var continueBtn = document.getElementById('continueBtn');
   var errorMsg = document.getElementById('errorMsg');
-  var debugInfo = document.getElementById('debugInfo');
-
-  // Subtitles overlay element
   var subtitleBox = document.getElementById('subtitleBox');
+  var muteNotice = document.getElementById('muteNotice');
 
-  // Tracking
-  var watchedPercent = 0;
+  // ========== ANTI-SKIP TRACKING ==========
+  // Track actual seconds watched, not video position
+  var secondsWatched = {};  // Store each second watched
+  var videoDuration = 0;
   var canProceed = false;
   var requiredPercent = 90;
 
-  // Zoho form URL
   var formUrl = 'https://rascortalks.zohocreatorportal.eu/#Report:Your_Toolbox_Talks?ID=' + talkId;
 
-  // Debug: Show what was parsed (remove this in production)
-  // debugInfo.style.display = 'block';
-  // debugInfo.innerHTML = '<strong>Debug:</strong><br>Video URL: ' + videoURL + '<br>Talk ID: ' + talkId + '<br>Subs URL: ' + subsURL;
-
-  // ====== SUBTITLES: Load + Parse + Sync ======
+  // ========== Subtitles ==========
   var SUBS = [];
   var subsReady = false;
   var subIdx = 0;
@@ -154,15 +121,10 @@
   }
 
   function srtTimeToSeconds(t) {
-    // "HH:MM:SS,mmm" or "HH:MM:SS.mmm"
     t = t.trim().replace('.', ',');
     var parts = t.split(/[:,]/);
     if (parts.length < 4) return 0;
-    var hh = parseInt(parts[0],10) || 0;
-    var mm = parseInt(parts[1],10) || 0;
-    var ss = parseInt(parts[2],10) || 0;
-    var ms = parseInt(parts[3],10) || 0;
-    return hh*3600 + mm*60 + ss + (ms/1000);
+    return parseInt(parts[0],10)*3600 + parseInt(parts[1],10)*60 + parseInt(parts[2],10) + parseInt(parts[3],10)/1000;
   }
 
   function parseSRT(srt) {
@@ -170,82 +132,231 @@
     if (!srt) return [];
     var blocks = srt.split(/\n\n+/);
     var out = [];
-
-    for (var i=0;i<blocks.length;i++){
+    for (var i=0; i<blocks.length; i++) {
       var lines = blocks[i].split('\n').filter(Boolean);
       if (lines.length < 2) continue;
-
-      // SRT usually: index line then time line
       var timeLine = lines[1].includes('-->') ? lines[1] : lines[0];
       var textStart = lines[1].includes('-->') ? 2 : 1;
-
       var m = timeLine.match(/(\d\d:\d\d:\d\d[,.]\d\d\d)\s*-->\s*(\d\d:\d\d:\d\d[,.]\d\d\d)/);
       if (!m) continue;
-
-      var start = srtTimeToSeconds(m[1]);
-      var end = srtTimeToSeconds(m[2]);
-      var text = lines.slice(textStart).join('\n');
-
-      out.push({ start:start, end:end, text:text });
+      out.push({ start: srtTimeToSeconds(m[1]), end: srtTimeToSeconds(m[2]), text: lines.slice(textStart).join('\n') });
     }
-
-    out.sort(function(a,b){ return a.start - b.start; });
-    return out;
+    return out.sort(function(a,b){ return a.start - b.start; });
   }
 
   function loadSubtitles(url) {
-    if (!url) return; // optional
+    if (!url) return;
     fetch(url)
-      .then(function(r){
-        if (!r.ok) throw new Error("Failed to fetch subtitles");
-        return r.text();
-      })
+      .then(function(r){ return r.ok ? r.text() : Promise.reject(); })
       .then(function(txt){
         txt = (txt || "").trim();
-        if (!txt) return;
-
-        // JSON accepted too: [{start:0.5,end:2.2,text:"..."}]
         if (txt.startsWith("{") || txt.startsWith("[")) {
           SUBS = JSON.parse(txt);
         } else {
           SUBS = parseSRT(txt);
         }
-
-        subsReady = Array.isArray(SUBS) && SUBS.length > 0;
-        if (subsReady) {
-          subtitleBox.style.display = "block";
-          subIdx = 0;
-        }
+        subsReady = SUBS.length > 0;
+        if (subsReady) subtitleBox.style.display = "block";
       })
-      .catch(function(e){
-        console.log("Subtitle load error:", e);
-        // Do not break page if subtitles fail
-      });
+      .catch(function(){});
   }
 
   function updateSubtitlesAtTime(t) {
-    if (!subsReady || SUBS.length === 0) return;
-
-    // Advance if we've passed the current subtitle
+    if (!subsReady) return;
     while (subIdx < SUBS.length && t >= SUBS[subIdx].end) subIdx++;
-
-    // If user seeks backwards, step back
     while (subIdx > 0 && t < SUBS[subIdx].start) subIdx--;
-
     var s = SUBS[subIdx];
-    if (s && t >= s.start && t < s.end) {
-      showSubtitle(s.text);
-    } else {
-      showSubtitle("");
-    }
+    showSubtitle(s && t >= s.start && t < s.end ? s.text : "");
   }
 
   loadSubtitles(subsURL);
 
-  // ====== MAIN INIT ======
-  if (videoURL && talkId) {
+  // ========== Progress Tracking (Anti-Skip) ==========
+  function markSecondWatched(second) {
+    secondsWatched[Math.floor(second)] = true;
+  }
 
-    // Detect video type and extract ID
+  function getUniqueSecondsWatched() {
+    return Object.keys(secondsWatched).length;
+  }
+
+  function updateProgress() {
+    if (videoDuration <= 0) return;
+    
+    var watched = getUniqueSecondsWatched();
+    var percent = (watched / videoDuration) * 100;
+    
+    progressFill.style.width = Math.min(percent, 100) + '%';
+
+    if (percent >= requiredPercent && !canProceed) {
+      canProceed = true;
+      continueBtn.classList.add('ready');
+      statusText.textContent = '✓ You can now continue to sign off';
+      statusText.style.color = '#28a745';
+    } else if (!canProceed) {
+      statusText.textContent = 'Watched: ' + Math.round(percent) + '% (need ' + requiredPercent + '% to continue)';
+    }
+  }
+
+  // ========== Video Type Detection ==========
+  function extractYouTubeId(url) {
+    var patterns = [
+      /youtube\.com\/shorts\/([a-zA-Z0-9_-]+)/,
+      /youtube\.com\/embed\/([a-zA-Z0-9_-]+)/,
+      /youtube\.com\/watch\?v=([a-zA-Z0-9_-]+)/,
+      /youtube\.com\/watch\?.*v=([a-zA-Z0-9_-]+)/,
+      /youtu\.be\/([a-zA-Z0-9_-]+)/
+    ];
+    for (var i = 0; i < patterns.length; i++) {
+      var match = url.match(patterns[i]);
+      if (match) return match[1];
+    }
+    return null;
+  }
+
+  // ========== YouTube Player ==========
+  var ytPlayer = null;
+
+  function initYouTube(videoId) {
+    var playerDiv = document.createElement('div');
+    playerDiv.id = 'ytPlayerDiv';
+    videoWrapper.innerHTML = '';
+    videoWrapper.appendChild(playerDiv);
+    videoWrapper.appendChild(subtitleBox);
+
+    if (window.YT && window.YT.Player) {
+      createYTPlayer(videoId);
+    } else {
+      var tag = document.createElement('script');
+      tag.src = 'https://www.youtube.com/iframe_api';
+      document.head.appendChild(tag);
+      window.onYouTubeIframeAPIReady = function() { createYTPlayer(videoId); };
+    }
+  }
+
+  function createYTPlayer(videoId) {
+    ytPlayer = new YT.Player('ytPlayerDiv', {
+      videoId: videoId,
+      playerVars: {
+        'autoplay': 1,
+        'mute': 1,  // MUTED for autoplay to work
+        'rel': 0,
+        'modestbranding': 1,
+        'playsinline': 1,
+        'disablekb': 1,  // Disable keyboard shortcuts
+        'controls': 1
+      },
+      events: {
+        'onReady': function(e) {
+          muteNotice.style.display = 'block';
+          e.target.playVideo();
+          videoDuration = e.target.getDuration();
+          startYTTracking();
+        },
+        'onError': function(e) {
+          showError('YouTube error: ' + e.data);
+        }
+      }
+    });
+  }
+
+  function startYTTracking() {
+    setInterval(function() {
+      if (ytPlayer && typeof ytPlayer.getCurrentTime === 'function') {
+        var current = ytPlayer.getCurrentTime();
+        var state = ytPlayer.getPlayerState();
+        
+        // Only count if actually playing (state 1)
+        if (state === 1) {
+          markSecondWatched(current);
+        }
+        
+        updateProgress();
+        updateSubtitlesAtTime(current);
+      }
+    }, 250);
+  }
+
+  // ========== Direct MP4 Player ==========
+  function initDirectVideo(url) {
+    var video = document.createElement('video');
+    video.src = url;
+    video.controls = true;
+    video.autoplay = true;
+    video.muted = true;  // MUTED for autoplay
+    video.playsInline = true;
+    video.id = 'directPlayer';
+    
+    videoWrapper.innerHTML = '';
+    videoWrapper.appendChild(video);
+    videoWrapper.appendChild(subtitleBox);
+
+    muteNotice.style.display = 'block';
+
+    video.addEventListener('loadedmetadata', function() {
+      videoDuration = video.duration;
+    });
+
+    // Track only while playing
+    var lastTime = 0;
+    video.addEventListener('timeupdate', function() {
+      var current = video.currentTime;
+      
+      // Only mark as watched if progressing naturally (not seeking)
+      if (Math.abs(current - lastTime) < 2) {
+        markSecondWatched(current);
+      }
+      lastTime = current;
+      
+      updateProgress();
+      updateSubtitlesAtTime(current);
+    });
+
+    // Detect seeking - don't penalize but don't reward either
+    video.addEventListener('seeking', function() {
+      lastTime = video.currentTime;
+    });
+
+    video.addEventListener('error', function() {
+      showError('Failed to load video file.');
+    });
+
+    // Unmute on first click
+    video.addEventListener('click', function() {
+      if (video.muted) {
+        video.muted = false;
+        muteNotice.style.display = 'none';
+      }
+    });
+  }
+
+  // ========== Google Drive ==========
+  function initGoogleDrive(fileId) {
+    var iframe = document.createElement('iframe');
+    iframe.src = 'https://drive.google.com/file/d/' + fileId + '/preview';
+    iframe.allow = 'autoplay';
+    videoWrapper.innerHTML = '';
+    videoWrapper.appendChild(iframe);
+    videoWrapper.appendChild(subtitleBox);
+
+    // Can't track GDrive properly - use time-based
+    var urlParams = new URLSearchParams(window.location.search);
+    var estimatedDuration = parseInt(urlParams.get('duration')) || 120;
+    videoDuration = estimatedDuration;
+    var startTime = Date.now();
+
+    statusText.textContent = 'Please watch the full video (' + Math.round(estimatedDuration * 0.9) + ' seconds minimum)';
+
+    setInterval(function() {
+      var elapsed = (Date.now() - startTime) / 1000;
+      markSecondWatched(elapsed);
+      updateProgress();
+      updateSubtitlesAtTime(elapsed);
+    }, 1000);
+  }
+
+  // ========== Init ==========
+  if (videoURL && talkId) {
     var videoId = null;
     var videoType = null;
 
@@ -255,226 +366,20 @@
     } else if (videoURL.includes('drive.google.com')) {
       videoType = 'gdrive';
       var match = videoURL.match(/\/d\/([a-zA-Z0-9_-]+)/);
-      if (match) {
-        videoId = match[1];
-      }
-    } else if (videoURL.includes('.mp4') || videoURL.includes('.webm') || videoURL.includes('.ogg')) {
+      if (match) videoId = match[1];
+    } else if (videoURL.match(/\.(mp4|webm|ogg)/i)) {
       videoType = 'direct';
       videoId = videoURL;
     }
 
-    // Initialize based on video type
-    if (videoType === 'youtube' && videoId) {
-      initYouTube(videoId);
-    } else if (videoType === 'gdrive' && videoId) {
-      initGoogleDrive(videoId);
-    } else if (videoType === 'direct') {
-      initDirectVideo(videoId);
-    } else {
-      showError('Could not detect video type from URL: ' + videoURL);
-    }
-
+    if (videoType === 'youtube' && videoId) initYouTube(videoId);
+    else if (videoType === 'gdrive' && videoId) initGoogleDrive(videoId);
+    else if (videoType === 'direct') initDirectVideo(videoId);
+    else showError('Could not detect video type');
   } else {
-    var missing = [];
-    if (!videoURL) missing.push('video URL');
-    if (!talkId) missing.push('talk ID');
-    showError('Missing ' + missing.join(' and ') + ' in the link.');
+    showError('Missing video URL or talk ID');
   }
 
-  // ========== YouTube ID Extraction ==========
-  function extractYouTubeId(url) {
-    // Handle various YouTube URL formats
-    var patterns = [
-      /youtube\.com\/shorts\/([a-zA-Z0-9_-]+)/,      // Shorts
-      /youtube\.com\/embed\/([a-zA-Z0-9_-]+)/,       // Embed
-      /youtube\.com\/v\/([a-zA-Z0-9_-]+)/,           // Old embed
-      /youtube\.com\/watch\?v=([a-zA-Z0-9_-]+)/,     // Standard watch
-      /youtube\.com\/watch\?.*v=([a-zA-Z0-9_-]+)/,   // Watch with other params first
-      /youtu\.be\/([a-zA-Z0-9_-]+)/                  // Short URL
-    ];
-
-    for (var i = 0; i < patterns.length; i++) {
-      var match = url.match(patterns[i]);
-      if (match && match[1]) return match[1];
-    }
-
-    return null;
-  }
-
-  // ========== YouTube Player ==========
-  var ytPlayerInstance = null;
-
-  function initYouTube(videoId) {
-    // Create a placeholder div for the player
-    var playerDiv = document.createElement('div');
-    playerDiv.id = 'ytPlayerDiv';
-    videoWrapper.innerHTML = '';
-    videoWrapper.appendChild(playerDiv);
-
-    // Re-add subtitle overlay on top (because we cleared videoWrapper)
-    videoWrapper.appendChild(subtitleBox);
-
-    // Load YouTube API
-    if (window.YT && window.YT.Player) {
-      createYTPlayer(videoId);
-    } else {
-      var tag = document.createElement('script');
-      tag.src = 'https://www.youtube.com/iframe_api';
-      var firstScriptTag = document.getElementsByTagName('script')[0];
-      firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-
-      window.onYouTubeIframeAPIReady = function() {
-        createYTPlayer(videoId);
-      };
-    }
-  }
-
-  function createYTPlayer(videoId) {
-    ytPlayerInstance = new YT.Player('ytPlayerDiv', {
-      videoId: videoId,
-      playerVars: {
-        'autoplay': 1,
-        'rel': 0,
-        'modestbranding': 1,
-        'playsinline': 1,
-        'enablejsapi': 1
-      },
-      events: {
-        'onReady': function(event) {
-          event.target.playVideo();
-          startYTProgressTracking();
-        },
-        'onStateChange': function(event) {
-          if (event.data === 1) {
-            startYTProgressTracking();
-          }
-        },
-        'onError': function(e) {
-          var errorCodes = {
-            2: 'Invalid video ID',
-            5: 'HTML5 player error',
-            100: 'Video not found or private',
-            101: 'Video cannot be embedded',
-            150: 'Video cannot be embedded'
-          };
-          var errorText = errorCodes[e.data] || 'Unknown error (code: ' + e.data + ')';
-          showError('YouTube error: ' + errorText);
-        }
-      }
-    });
-    window.ytPlayer = ytPlayerInstance;
-  }
-
-  var ytTrackingStarted = false;
-  function startYTProgressTracking() {
-    if (ytTrackingStarted) return;
-    ytTrackingStarted = true;
-
-    setInterval(function() {
-      if (ytPlayerInstance && typeof ytPlayerInstance.getCurrentTime === 'function') {
-        try {
-          var duration = ytPlayerInstance.getDuration();
-          var current = ytPlayerInstance.getCurrentTime();
-          if (duration && duration > 0) {
-            var percent = (current / duration) * 100;
-            updateProgress(percent);
-            updateSubtitlesAtTime(current); // NEW
-          }
-        } catch (e) {}
-      }
-    }, 250);
-  }
-
-  // ========== Google Drive Player ==========
-  function initGoogleDrive(fileId) {
-    var iframe = document.createElement('iframe');
-    iframe.src = 'https://drive.google.com/file/d/' + fileId + '/preview';
-    iframe.allow = 'autoplay';
-    iframe.id = 'gdrivePlayer';
-    videoWrapper.innerHTML = '';
-    videoWrapper.appendChild(iframe);
-
-    // Re-add subtitle overlay on top (because we cleared videoWrapper)
-    videoWrapper.appendChild(subtitleBox);
-
-    // Google Drive doesn't expose playback progress via API
-    // Use time-based tracking instead
-    var notice = document.createElement('p');
-    notice.className = 'gdrive-notice';
-    notice.textContent = 'Progress is tracked by time. Please watch the full video.';
-    progressContainer.appendChild(notice);
-
-    // For Drive, subtitle sync cannot be exact. If subs exist, we "approximate" by elapsed time.
-    if (subsURL) {
-      subtitleBox.style.display = "block";
-      subtitleBox.innerHTML =
-        "Subtitles on Google Drive preview are approximate.<div class='subtitle-small'>For perfect sync, use a direct MP4 or YouTube.</div>";
-    }
-
-    // Estimate video duration (default 2 minutes, or pass ?duration= param)
-    var urlParams = new URLSearchParams(window.location.search);
-    var estimatedDuration = parseInt(urlParams.get('duration')) || 120;
-    var startTime = Date.now();
-
-    statusText.textContent = 'Video loaded. Please watch at least 90% (' + Math.round(estimatedDuration * 0.9) + ' seconds)';
-
-    setInterval(function() {
-      var elapsed = (Date.now() - startTime) / 1000;
-      var percent = Math.min((elapsed / estimatedDuration) * 100, 100);
-      updateProgress(percent);
-
-      // Approx subtitle timing (best-effort only)
-      updateSubtitlesAtTime(elapsed);
-    }, 500);
-  }
-
-  // ========== Direct MP4/Video Player ==========
-  function initDirectVideo(url) {
-    var video = document.createElement('video');
-    video.src = url;
-    video.controls = true;
-    video.autoplay = true;
-    video.id = 'directPlayer';
-    videoWrapper.innerHTML = '';
-    videoWrapper.appendChild(video);
-
-    // Re-add subtitle overlay on top (because we cleared videoWrapper)
-    videoWrapper.appendChild(subtitleBox);
-
-    video.addEventListener('timeupdate', function() {
-      if (video.duration > 0) {
-        updateProgress((video.currentTime / video.duration) * 100);
-        updateSubtitlesAtTime(video.currentTime); // NEW
-      }
-    });
-
-    // Also update on seek for snappier subtitle changes
-    video.addEventListener('seeked', function() {
-      updateSubtitlesAtTime(video.currentTime || 0);
-    });
-
-    video.addEventListener('error', function() {
-      showError('Failed to load video file.');
-    });
-  }
-
-  // ========== Progress Tracking ==========
-  function updateProgress(percent) {
-    watchedPercent = Math.max(watchedPercent, percent);
-    progressFill.style.width = Math.min(watchedPercent, 100) + '%';
-
-    if (watchedPercent >= requiredPercent && !canProceed) {
-      canProceed = true;
-      continueBtn.classList.add('ready');
-      continueBtn.style.cursor = 'pointer';
-      statusText.textContent = '✓ You can now continue to sign off';
-      statusText.style.color = '#28a745';
-    } else if (!canProceed) {
-      statusText.textContent = 'Watched: ' + Math.round(watchedPercent) + '% (need ' + requiredPercent + '% to continue)';
-    }
-  }
-
-  // ========== Navigation ==========
   function goToForm() {
     if (!canProceed) {
       alert('Please watch at least ' + requiredPercent + '% of the video before continuing.');
@@ -483,13 +388,11 @@
     window.location.href = formUrl;
   }
 
-  // ========== Error Handling ==========
   function showError(msg) {
     errorMsg.textContent = 'Error: ' + msg;
     errorMsg.style.display = 'block';
-    progressContainer.style.display = 'none';
+    document.getElementById('progressContainer').style.display = 'none';
     continueBtn.style.display = 'none';
-    // Hide subtitles if any
     subtitleBox.style.display = 'none';
   }
 </script>
