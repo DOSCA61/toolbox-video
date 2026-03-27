@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AIGP Study Hub — Donal</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0f14;
+    --surface: #14171f;
+    --surface2: #1c2030;
+    --border: #252a3a;
+    --accent: #4f9cf9;
+    --accent2: #a78bfa;
+    --accent3: #34d399;
+    --accent4: #fb923c;
+    --text: #e2e8f0;
+    --muted: #64748b;
+    --danger: #f87171;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    min-height: 100vh;
+    padding: 0 0 80px;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, #0d1526 0%, #151d35 50%, #0d0f14 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 48px 32px 40px;
+    position: relative;
+    overflow: hidden;
+  }
+  header::before {
+    content: '';
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 280px; height: 280px;
+    background: radial-gradient(circle, rgba(79,156,249,0.12) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+  header::after {
+    content: '';
+    position: absolute;
+    bottom: -40px; left: 20%;
+    width: 200px; height: 200px;
+    background: radial-gradient(circle, rgba(167,139,250,0.08) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+  .header-inner { max-width: 960px; margin: 0 auto; position: relative; z-index: 1; }
+  .header-badge {
+    display: inline-block;
+    background: rgba(79,156,249,0.12);
+    border: 1px solid rgba(79,156,249,0.3);
+    color: var(--accent);
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 4px 12px;
+    border-radius: 20px;
+    margin-bottom: 16px;
+  }
+  h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(2rem, 5vw, 3.2rem);
+    line-height: 1.1;
+    color: #fff;
+    margin-bottom: 10px;
+  }
+  h1 em {
+    font-style: italic;
+    color: var(--accent);
+  }
+  .header-sub {
+    color: var(--muted);
+    font-size: 0.95rem;
+    margin-bottom: 28px;
+  }
+  .exam-stats {
+    display: flex;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+  .stat {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 12px 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .stat-label { font-size: 0.65rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; font-family: 'DM Mono', monospace; }
+  .stat-value { font-size: 1.1rem; font-weight: 600; color: var(--text); }
+  .stat-value.green { color: var(--accent3); }
+  .stat-value.blue { color: var(--accent); }
+  .stat-value.purple { color: var(--accent2); }
+  .stat-value.orange { color: var(--accent4); }
+
+  /* LAYOUT */
+  main { max-width: 960px; margin: 0 auto; padding: 40px 32px 0; }
+  section { margin-bottom: 48px; }
+  .section-title {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .section-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  /* CARDS */
+  .card-grid { display: grid; gap: 12px; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); }
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    text-decoration: none;
+    color: var(--text);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    transition: border-color 0.2s, background 0.2s, transform 0.15s;
+    cursor: pointer;
+  }
+  .card:hover {
+    border-color: rgba(79,156,249,0.4);
+    background: var(--surface2);
+    transform: translateY(-2px);
+  }
+  .card-icon { font-size: 1.4rem; }
+  .card-title { font-weight: 600; font-size: 0.95rem; }
+  .card-desc { font-size: 0.8rem; color: var(--muted); line-height: 1.5; }
+  .card-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 2px 8px;
+    border-radius: 4px;
+    display: inline-block;
+    margin-top: 4px;
+    width: fit-content;
+  }
+  .tag-official { background: rgba(79,156,249,0.12); color: var(--accent); border: 1px solid rgba(79,156,249,0.2); }
+  .tag-study { background: rgba(52,211,153,0.12); color: var(--accent3); border: 1px solid rgba(52,211,153,0.2); }
+  .tag-quiz { background: rgba(167,139,250,0.12); color: var(--accent2); border: 1px solid rgba(167,139,250,0.2); }
+  .tag-cost { background: rgba(251,146,60,0.12); color: var(--accent4); border: 1px solid rgba(251,146,60,0.2); }
+
+  /* MNEMONICS TABLE */
+  .mnemo-table { width: 100%; border-collapse: collapse; }
+  .mnemo-table th {
+    text-align: left;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--border);
+  }
+  .mnemo-table td {
+    padding: 12px 12px;
+    border-bottom: 1px solid rgba(37,42,58,0.5);
+    font-size: 0.85rem;
+    vertical-align: top;
+  }
+  .mnemo-table tr:last-child td { border-bottom: none; }
+  .mnemo-table tr:hover td { background: rgba(255,255,255,0.02); }
+  .mnemo { font-family: 'DM Mono', monospace; font-size: 0.78rem; color: var(--accent2); line-height: 1.5; }
+  .covers { color: var(--muted); font-size: 0.8rem; }
+  .cat-pill {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.58rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 2px 7px;
+    border-radius: 4px;
+    display: inline-block;
+    white-space: nowrap;
+  }
+  .cat-gdpr { background: rgba(79,156,249,0.1); color: var(--accent); }
+  .cat-euai { background: rgba(167,139,250,0.1); color: var(--accent2); }
+  .cat-trust { background: rgba(52,211,153,0.1); color: var(--accent3); }
+  .cat-risk { background: rgba(251,146,60,0.1); color: var(--accent4); }
+  .cat-lifecycle { background: rgba(248,113,113,0.1); color: var(--danger); }
+  .cat-oecd { background: rgba(148,163,184,0.1); color: #94a3b8; }
+
+  .table-wrap {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    overflow-x: auto;
+  }
+
+  /* CHECKLIST */
+  .checklist { display: flex; flex-direction: column; gap: 8px; }
+  .check-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px 18px;
+    cursor: pointer;
+    transition: border-color 0.2s;
+  }
+  .check-item:hover { border-color: rgba(79,156,249,0.3); }
+  .check-item.done { opacity: 0.5; }
+  .check-item.done .check-text { text-decoration: line-through; }
+  .checkbox {
+    width: 20px; height: 20px;
+    border: 2px solid var(--border);
+    border-radius: 6px;
+    flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    transition: background 0.2s, border-color 0.2s;
+    font-size: 0.7rem;
+  }
+  .check-item.done .checkbox {
+    background: var(--accent3);
+    border-color: var(--accent3);
+    color: #000;
+  }
+  .check-text { font-size: 0.875rem; flex: 1; }
+  .check-meta { font-size: 0.7rem; color: var(--muted); font-family: 'DM Mono', monospace; }
+
+  /* EXAM PANEL */
+  .exam-panel {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 20px;
+  }
+  .exam-item {}
+  .exam-item-label { font-size: 0.65rem; font-family: 'DM Mono', monospace; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); margin-bottom: 4px; }
+  .exam-item-value { font-size: 0.95rem; font-weight: 500; }
+
+  /* PROGRESS BAR */
+  .progress-wrap { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 20px 24px; }
+  .progress-label { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+  .progress-title { font-size: 0.875rem; font-weight: 500; }
+  .progress-pct { font-family: 'DM Mono', monospace; font-size: 0.8rem; color: var(--accent); }
+  .progress-bar-bg { background: var(--border); border-radius: 4px; height: 6px; overflow: hidden; }
+  .progress-bar-fill { height: 100%; background: linear-gradient(90deg, var(--accent), var(--accent2)); border-radius: 4px; transition: width 0.4s; }
+
+  /* DOMAIN BLOCKS */
+  .domain-grid { display: grid; gap: 12px; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); }
+  .domain-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 18px;
+  }
+  .domain-num { font-family: 'DM Mono', monospace; font-size: 0.65rem; color: var(--muted); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.08em; }
+  .domain-name { font-size: 0.9rem; font-weight: 500; margin-bottom: 10px; line-height: 1.4; }
+  .domain-range { font-family: 'DM Mono', monospace; font-size: 0.75rem; color: var(--accent4); }
+
+  a { color: inherit; text-decoration: none; }
+  @media (max-width: 600px) {
+    header { padding: 32px 20px 28px; }
+    main { padding: 28px 20px 0; }
+    .exam-stats { gap: 12px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="header-badge">AIGP Exam Prep — 2026</div>
+    <h1>Your <em>AIGP</em> Study Hub</h1>
+    <p class="header-sub">All resources, mnemonics, and study aids in one place.</p>
+    <div class="exam-stats">
+      <div class="stat">
+        <span class="stat-label">Exam Format</span>
+        <span class="stat-value blue">100 Q · 3 hrs</span>
+      </div>
+      <div class="stat">
+        <span class="stat-label">Pass Threshold</span>
+        <span class="stat-value green">300 / 500</span>
+      </div>
+      <div class="stat">
+        <span class="stat-label">Non-Member Fee</span>
+        <span class="stat-value orange">$799 USD</span>
+      </div>
+      <div class="stat">
+        <span class="stat-label">Certification Term</span>
+        <span class="stat-value purple">2 Years</span>
+      </div>
+      <div class="stat">
+        <span class="stat-label">BoK Version</span>
+        <span class="stat-value">v2.1 (Feb 2026)</span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main>
+
+  <!-- OFFICIAL RESOURCES -->
+  <section>
+    <div class="section-title">Official IAPP Resources</div>
+    <div class="card-grid">
+      <a class="card" href="https://iapp.org/certify/aigp" target="_blank">
+        <div class="card-icon">🏛️</div>
+        <div class="card-title">AIGP Certification Page</div>
+        <div class="card-desc">Official IAPP page — BoK download, exam blueprint, study guide, and all certification details.</div>
+        <span class="card-tag tag-official">Official · iapp.org</span>
+      </a>
+      <a class="card" href="https://assets.contentstack.io/v3/assets/bltd4dd5b2d705252bc/blt0d33152fd20bc134/AIGP_Cert%20BOK.pdf" target="_blank">
+        <div class="card-icon">📄</div>
+        <div class="card-title">BoK v2.1 Blueprint PDF</div>
+        <div class="card-desc">The exact document the exam is built from. Four domains, min/max question counts per topic. Effective Feb 2, 2026.</div>
+        <span class="card-tag tag-official">Free Download · PDF</span>
+      </a>
+      <a class="card" href="https://store.iapp.org/aigp-exam/" target="_blank">
+        <div class="card-icon">🎟️</div>
+        <div class="card-title">Buy the Exam</div>
+        <div class="card-desc">Purchase through IAPP Store, then schedule via Pearson VUE. Can be taken online (OnVUE) or at a test centre.</div>
+        <span class="card-tag tag-cost">$799 non-member · $649 member</span>
+      </a>
+      <a class="card" href="https://store.iapp.org/aigp-practice-exam-digital/" target="_blank">
+        <div class="card-icon">📝</div>
+        <div class="card-title">Official Practice Exam</div>
+        <div class="card-desc">100 questions with correct answers and explanations. Same format and content as the real exam. Worth doing before you sit.</div>
+        <span class="card-tag tag-cost">~$60 non-member</span>
+      </a>
+      <a class="card" href="https://iapp.org/certify/faqs" target="_blank">
+        <div class="card-icon">❓</div>
+        <div class="card-title">Certification FAQs</div>
+        <div class="card-desc">Official answers on scheduling, retakes, multi-select questions, CPE maintenance, and the candidate handbook.</div>
+        <span class="card-tag tag-official">Official · iapp.org</span>
+      </a>
+      <a class="card" href="https://home.pearsonvue.com/" target="_blank">
+        <div class="card-icon">🖥️</div>
+        <div class="card-title">Pearson VUE</div>
+        <div class="card-desc">Schedule your exam here after purchasing from IAPP Store. Online (OnVUE) or test centre. Access via MyIAPP account.</div>
+        <span class="card-tag tag-official">Exam Scheduling</span>
+      </a>
+    </div>
+  </section>
+
+  <!-- YOUR STUDY MATERIALS -->
+  <section>
+    <div class="section-title">Your Study Materials (Claude Sessions)</div>
+    <div class="card-grid">
+      <a class="card" href="https://claude.ai/chat/1ee70972-10f0-429f-8740-ed91044c40c6" target="_blank">
+        <div class="card-icon">🃏</div>
+        <div class="card-title">Flashcard Quiz + Mnemonics</div>
+        <div class="card-desc">Interactive flip-card quiz covering all 18 mnemonics. Score tracking, retry missed cards, filter by category.</div>
+        <span class="card-tag tag-quiz">Flashcards · GDPR · EU AI Act · Lifecycle</span>
+      </a>
+      <a class="card" href="https://claude.ai/chat/cb0a93be-06e9-4f73-858c-f9a0ad5a24e1" target="_blank">
+        <div class="card-icon">📚</div>
+        <div class="card-title">Study Notes — All Domains</div>
+        <div class="card-desc">Live note-taking session from the AIGP Masterclass. Domain framework, lecture summaries, exam tips.</div>
+        <span class="card-tag tag-study">4 Domains · Frameworks · Notes</span>
+      </a>
+      <a class="card" href="https://claude.ai/chat/1ee70972-10f0-429f-8740-ed91044c40c6" target="_blank">
+        <div class="card-icon">🧠</div>
+        <div class="card-title">Mnemonic Master List</div>
+        <div class="card-desc">All 18 mnemonics in one conversation — OECD, Privacy by Design, GDPR Art 5/6/9, EU AI Act, Trustworthy AI, Bias types, HARMS, AAMT.</div>
+        <span class="card-tag tag-study">18 Mnemonics · Full List Below</span>
+      </a>
+    </div>
+  </section>
+
+  <!-- EXAM DOMAINS -->
+  <section>
+    <div class="section-title">BoK v2.1 — 4 Exam Domains</div>
+    <div class="domain-grid">
+      <div class="domain-card">
+        <div class="domain-num">Domain I · 16–20 questions</div>
+        <div class="domain-name">Understanding the Foundations of AI Governance</div>
+        <div class="domain-range">What AI governance is, core principles, why it matters, the AI lifecycle, stakeholders</div>
+      </div>
+      <div class="domain-card">
+        <div class="domain-num">Domain II</div>
+        <div class="domain-name">Understanding How Laws, Standards & Frameworks Apply to AI</div>
+        <div class="domain-range">EU AI Act, GDPR, NIST AI RMF, ISO 42001, sector-specific laws</div>
+      </div>
+      <div class="domain-card">
+        <div class="domain-num">Domain III</div>
+        <div class="domain-name">Understanding How to Govern AI Development</div>
+        <div class="domain-range">Risk management, data governance, technical docs, testing, validation (TEVV)</div>
+      </div>
+      <div class="domain-card">
+        <div class="domain-num">Domain IV</div>
+        <div class="domain-name">Understanding How to Govern AI Deployment and Use</div>
+        <div class="domain-range">Post-deployment monitoring, human oversight, incident response, provider vs deployer obligations</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STUDY CHECKLIST -->
+  <section>
+    <div class="section-title">Study Checklist</div>
+    <div class="checklist" id="checklist">
+      <div class="check-item" onclick="toggleCheck(this)">
+        <div class="checkbox"></div>
+        <span class="check-text">Download and read BoK v2.1 PDF — map it to your Udemy notes</span>
+        <span class="check-meta">Priority 1</span>
+      </div>
+      <div class="check-item" onclick="toggleCheck(this)">
+        <div class="checkbox"></div>
+        <span class="check-text">Run through all 18 mnemonics — can you recall each from the topic name?</span>
+        <span class="check-meta">Flashcard quiz</span>
+      </div>
+      <div class="check-item" onclick="toggleCheck(this)">
+        <div class="checkbox"></div>
+        <span class="check-text">Know your EU AI Act Provider vs Deployer obligations cold — this is heavily tested</span>
+        <span class="check-meta">Domain II/IV</span>
+      </div>
+      <div class="check-item" onclick="toggleCheck(this)">
+        <div class="checkbox"></div>
+        <span class="check-text">Know the 7 prohibited AI practices (Art. 5 EU AI Act)</span>
+        <span class="check-meta">Six Mummies mnemonic</span>
+      </div>
+      <div class="check-item" onclick="toggleCheck(this)">
+        <div class="checkbox"></div>
+        <span class="check-text">Know the NIST AI RMF 4 functions: GOVERN, MAP, MEASURE, MANAGE</span>
+        <span class="check-meta">Domain II</span>
+      </div>
+      <div class="check-item" onclick="toggleCheck(this)">
+        <div class="checkbox"></div>
+        <span class="check-text">Buy and sit the official IAPP Practice Exam (100 Qs, with rationales)</span>
+        <span class="check-meta">~$60 · store.iapp.org</span>
+      </div>
+      <div class="check-item" onclick="toggleCheck(this)">
+        <div class="checkbox"></div>
+        <span class="check-text">Register for the actual IAPP exam via Pearson VUE</span>
+        <span class="check-meta">$799 non-member</span>
+      </div>
+      <div class="check-item" onclick="toggleCheck(this)">
+        <div class="checkbox"></div>
+        <span class="check-text">Do a dry run with OnVUE — test webcam, mic, network, room setup</span>
+        <span class="check-meta">Pre-exam day</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- MNEMONICS TABLE -->
+  <section>
+    <div class="section-title">All 18 Mnemonics — Master List</div>
+    <div class="table-wrap">
+      <table class="mnemo-table">
+        <thead>
+          <tr>
+            <th style="width:40%">Mnemonic</th>
+            <th style="width:35%">What It Covers</th>
+            <th style="width:25%">Category</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="mnemo">At Paradise, Dalmatian Dogs Snooze Near Aerial Unicorns</span></td>
+            <td><span class="covers">OECD Privacy Principles</span></td>
+            <td><span class="cat-pill cat-oecd">OECD</span></td>
+          </tr>
+          <tr>
+            <td><span class="mnemo">Robot Pigs Devour Enormous Purple Eggplant Tacos</span></td>
+            <td><span class="covers">Privacy by Design — 7 Principles (Cavoukian)</span></td>
+            <td><span class="cat-pill cat-gdpr">Privacy by Design</span></td>
+          </tr>
+          <tr>
+            <td><span class="mnemo">Llamas Paraded Drowsily As Smurfs Imploded Accidentally</span></td>
+            <td><span class="covers">GDPR Article 5 — 7 Data Principles</span></td>
+            <td><span class="cat-pill cat-gdpr">GDPR</span></td>
+          </tr>
+          <tr>
+            <td><span class="mnemo">Crazed Clowns Vandalize Long Purple Limos</span></td>
+            <td><span class="covers">GDPR Article 6 — Lawful Bases for Processing</span></td>
+            <td><span class="cat-pill cat-gdpr">GDPR</span></td>
+          </tr>
+          <tr>
+            <td><span class="mnemo">Cats Eat Very Nice Pizza</span></td>
+            <td><span class="covers">Special Category Data Exceptions (Art. 9) — set 1</span></td>
+            <td><span class="cat-pill cat-gdpr">GDPR</span></td>
+          </tr>
+          <tr>
+            <td><span class="mnemo">Lions Share Honey Providing Aid</span></td>
+            <td><span class="covers">Special Category Data Exceptions (Art. 9) — set 2</span></td>
+            <td><span class="cat-pill cat-gdpr">GDPR</span></td>
+          </tr>
+          <tr>
+            <td><span class="mnemo">Professor Duck Diligently Investigates Peculiar Artifacts</span></td>
+            <td><span class="covers">EU AI Act Actor Roles (Provider, Deployer, Distributor, Importer, etc.)</span></td>
+            <td><span class="cat-pill cat-euai">EU AI Act</span></td>
+          </tr>
+          <tr>
+            <td><span class="mnemo">Six Mummies Eagerly Pat Elephant's Under Belly</span></td>
+            <td><span class="covers">EU AI Act Art. 5 — Prohibited AI Practices (7)</span></td>
+            <td><span class="cat-pill cat-euai">EU AI Act</span></td>
+          </tr>
+          <tr>
+            <td><span class="mnemo">BCMEEEAL</span></td>
+            <td><span class="covers">High-Risk AI Categories (Annex III)</span></td>
+            <td><span class="cat-pill cat-euai">EU AI Act</span></td>
+          </tr>
+          <tr>
+            <td><span class="mnemo">Bob Ross Draws Tripping Robots Triggering Happy Accidents</span></td>
+            <td><span class="covers">EU AI Act Arts. 9–15 — High-Risk Obligations (Risk mgmt, Data governance, Tech docs, Records, Transparency, Human oversight, Accuracy)</span></td>
+            <td><span class="cat-pill cat-euai">EU AI Act</span></td>
+          </tr>
+          <tr>
+            <td><span class="mnemo">Queen Dislikes Luxurious Cactus Cake Really</span></td>
+            <td><span class="covers">EU AI Act Arts. 17–22 — Provider Obligations (QMS, Documentation, Logging, Conformity, Registration)</span></td>
+            <td><span class="cat-pill cat-euai">EU AI Act</span></td>
+          </tr>
+          <tr>
+            <td><span class="mnemo">Penguins Dance Ballet To Disco On Rollerblades</span></td>
+            <td><span class="covers">AI System Lifecycle Stages (Plan, Design, Build, Train, Deploy, Operate, Retire)</span></td>
+            <td><span class="cat-pill cat-lifecycle">Lifecycle</span></td>
+          </tr>
+          <tr>
+            <td><span class="mnemo">HATA — Humans Always Trust Attorneys</span></td>
+            <td><span class="covers">4 Characteristics of Trustworthy AI</span></td>
+            <td><span class="cat-pill cat-trust">Trustworthy AI</span></td>
+          </tr>
+          <tr>
+            <td><span class="mnemo">Able Experts Never Push Silly Security Theatre</span></td>
+            <td><span class="covers">7 Principles of Trustworthy AI</span></td>
+            <td><span class="cat-pill cat-trust">Trustworthy AI</span></td>
+          </tr>
+          <tr>
+            <td><span class="mnemo">Good CEOs Usually Embed Digital Updates Enthusiastically</span></td>
+            <td><span class="covers">Operationalising Trustworthy AI</span></td>
+            <td><span class="cat-pill cat-trust">Trustworthy AI</span></td>
+          </tr>
+          <tr>
+            <td><span class="mnemo">All Cats Chase Silly Ignorant Slow Tortoises</span></td>
+            <td><span class="covers">7 Types of Algorithmic Bias</span></td>
+            <td><span class="cat-pill cat-risk">Bias</span></td>
+          </tr>
+          <tr>
+            <td><span class="mnemo">Accountants Always Make Transactions</span></td>
+            <td><span class="covers">AAMT — 4 Risk Responses (Accept, Avoid, Mitigate, Transfer)</span></td>
+            <td><span class="cat-pill cat-risk">Risk</span></td>
+          </tr>
+          <tr>
+            <td><span class="mnemo">Healthy Accountants Rarely Miss Sunsets</span></td>
+            <td><span class="covers">HARMS — AI Risk Taxonomy</span></td>
+            <td><span class="cat-pill cat-risk">Risk</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+</main>
+
+<script>
+  function toggleCheck(el) {
+    el.classList.toggle('done');
+    const cb = el.querySelector('.checkbox');
+    cb.textContent = el.classList.contains('done') ? '✓' : '';
+    saveState();
+  }
+
+  function saveState() {
+    const items = document.querySelectorAll('.check-item');
+    const state = Array.from(items).map(i => i.classList.contains('done'));
+    try { localStorage.setItem('aigp_checklist', JSON.stringify(state)); } catch(e) {}
+  }
+
+  function loadState() {
+    try {
+      const state = JSON.parse(localStorage.getItem('aigp_checklist') || '[]');
+      const items = document.querySelectorAll('.check-item');
+      items.forEach((item, i) => {
+        if (state[i]) {
+          item.classList.add('done');
+          item.querySelector('.checkbox').textContent = '✓';
+        }
+      });
+    } catch(e) {}
+  }
+
+  loadState();
+</script>
+</body>
+</html>
